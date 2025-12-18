@@ -5,14 +5,17 @@
   <h2 class="cart-title">장바구니</h2>
 
   <div id="cart-content-wrapper" class="cart-content">
-    <!-- Actions -->
-    <div style="text-align:right; margin-bottom:15px;">
-        <button onclick="clearCart()" style="padding:8px 14px; background:#fff; border:1px solid #ccc; color:#555; cursor:pointer; font-size:13px; border-radius:4px;">장바구니 비우기</button>
-    </div>
-
-    <!-- Cart Items -->
-    <div class="cart-list" id="cart-list">
-      <!-- JS will render items here -->
+    <!-- Left Section -->
+    <div class="cart-left-section" style="flex:1;">
+        <!-- Cart Items -->
+        <div class="cart-list" id="cart-list">
+          <!-- JS Render -->
+        </div>
+        
+        <!-- Actions (Moved to Bottom Right) -->
+        <div style="text-align:right; margin-top:15px;">
+            <button onclick="clearCart()" style="padding:8px 14px; background:#fff; border:1px solid #ccc; color:#555; cursor:pointer; font-size:13px; border-radius:4px;">장바구니 비우기</button>
+        </div>
     </div>
 
     <!-- Summary -->
@@ -70,7 +73,9 @@
           html += `
             <div class="cart-item">
               <div class="cart-img">
-                <img src="${item.image}" alt="${item.name}">
+                <a href="/dokju/product_view.php?id=${item.id}" style="display:block; height:100%;">
+                    <img src="${item.image}" alt="${item.name}">
+                </a>
               </div>
               <div class="cart-info">
                 <a href="/dokju/product_view.php?id=${item.id}" class="cart-name">${item.name}</a>

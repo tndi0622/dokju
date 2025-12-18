@@ -66,8 +66,15 @@ if($result->num_rows > 0) {
             <input type="text" id="order-phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" placeholder="010-0000-0000">
         </div>
         <div class="form-group">
+        <div class="form-group">
             <label>주소</label>
-            <input type="text" id="order-address" value="<?php echo htmlspecialchars($user['address'] ?? ''); ?>" placeholder="배송지 주소를 입력하세요">
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <input type="text" id="sample6_postcode" placeholder="우편번호" readonly onclick="execDaumPostcode()" style="flex:1;">
+                <input type="button" onclick="execDaumPostcode()" value="주소 검색" style="width: auto; cursor:pointer; background:#2b2b2b; color:#fff; border:none; padding:12px 20px; font-weight:500;">
+            </div>
+            <input type="text" id="sample6_address" placeholder="기본 주소" readonly onclick="execDaumPostcode()" style="margin-bottom:10px;">
+            <input type="text" id="sample6_detailAddress" placeholder="상세 주소를 입력하세요">
+            <input type="hidden" id="sample6_extraAddress">
         </div>
     </div>
 
@@ -91,6 +98,8 @@ if($result->num_rows > 0) {
 
 <!-- Toss Payments SDK -->
 <script src="https://js.tosspayments.com/v1/payment"></script>
+<!-- Daum Postcode SDK -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script>
     const clientKey = '<?php echo getenv('TOSS_CLIENT_KEY'); ?>'; // Toss Client Key
@@ -145,9 +154,15 @@ if($result->num_rows > 0) {
         // Validation
         const name = document.getElementById('order-name').value;
         const phone = document.getElementById('order-phone').value;
-        const addr = document.getElementById('order-address').value;
+        // Address Combine
+        const postcode = document.getElementById('sample6_postcode').value;
+        const basicAddr = document.getElementById('sample6_address').value;
+        const detailAddr = document.getElementById('sample6_detailAddress').value;
+        const extraAddr = document.getElementById('sample6_extraAddress').value;
         
-        if(!name || !phone || !addr) {
+        const addr = `(${postcode}) ${basicAddr} ${detailAddr} ${extraAddr}`.trim();
+        
+        if(!name || !phone || !postcode || !basicAddr) {
             alert('배송 정보를 모두 입력해주세요.');
             return;
         }
@@ -207,6 +222,41 @@ if($result->num_rows > 0) {
     }
     
     loadOrder();
+
+    // Daum Postcode Function
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = ''; 
+                var extraAddr = ''; 
+
+                if (data.userSelectedType === 'R') { 
+                    addr = data.roadAddress;
+                } else { 
+                    addr = data.jibunAddress;
+                }
+
+                if(data.userSelectedType === 'R'){
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    document.getElementById("sample6_extraAddress").value = extraAddr;
+                } else {
+                    document.getElementById("sample6_extraAddress").value = '';
+                }
+
+                document.getElementById('sample6_postcode').value = data.zonecode;
+                document.getElementById("sample6_address").value = addr;
+                document.getElementById("sample6_detailAddress").focus();
+            }
+        }).open();
+    }
 </script>
 
 <?php include './include/footer.php'; ?>

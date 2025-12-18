@@ -85,14 +85,23 @@ include './include/header.php';
           
           // Get comment count
           $comment_count = $conn->query("SELECT COUNT(*) as cnt FROM community_comments WHERE post_id = {$row['id']}")->fetch_assoc()['cnt'];
+          
+          // Extract thumbnail
+          $thumbnail = !empty($row['image']) ? $row['image'] : '';
+          if (empty($thumbnail)) {
+              preg_match('/<img[^>]+src="([^">]+)"/', $row['content'], $match);
+              if (isset($match[1])) {
+                  $thumbnail = $match[1];
+              }
+          }
         ?>
         <div class="post-item" onclick="location.href='/dokju/community_view.php?id=<?php echo $row['id']; ?>'" style="cursor:pointer;">
           <!-- Thumbnail -->
-          <div class="post-thumbnail <?php echo empty($row['image']) ? 'no-image' : ''; ?>">
-            <?php if (!empty($row['image'])): ?>
-              <img src="<?php echo htmlspecialchars($row['image']); ?>" alt="post image">
+          <div class="post-thumbnail <?php echo empty($thumbnail) ? 'no-image' : ''; ?>" style="display:flex; align-items:center; justify-content:center; overflow:hidden;">
+            <?php if (!empty($thumbnail)): ?>
+              <img src="<?php echo htmlspecialchars($thumbnail); ?>" alt="post image" style="width:100%; height:100%; object-fit:cover;">
             <?php else: ?>
-              📝
+               <svg viewBox="0 0 24 24" style="width:32px; height:32px; fill:#ccc;"><path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.04 0-1.43l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"/></svg>
             <?php endif; ?>
           </div>
           

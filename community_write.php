@@ -8,6 +8,32 @@ if(!isset($_SESSION['userid'])) {
 }
 
 include './include/header.php'; 
+
+// Edit Mode Logic
+$mode = 'write';
+$post_data = [];
+$post_id = '';
+
+if(isset($_GET['id'])) {
+    $post_id = intval($_GET['id']);
+    $stmt = $conn->prepare("SELECT * FROM community_posts WHERE id = ?");
+    $stmt->bind_param("i", $post_id);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    
+    if($res->num_rows > 0) {
+        $post_data = $res->fetch_assoc();
+        // Permission Check
+        if($post_data['userid'] !== $_SESSION['userid'] && $_SESSION['userid'] !== 'admin') {
+            echo "<script>alert('수정 권한이 없습니다.'); history.back();</script>";
+            exit;
+        }
+        $mode = 'edit';
+    } else {
+        echo "<script>alert('존재하지 않는 게시글입니다.'); history.back();</script>";
+        exit;
+    }
+}
 ?>
 <link rel="stylesheet" href="/dokju/css/shop.css?v=<?php echo time(); ?>">
 <style>
@@ -129,21 +155,24 @@ include './include/header.php';
     <h2 class="write-title">글쓰기</h2>
     
     <form class="write-form" action="/dokju/community_process.php" method="POST" enctype="multipart/form-data" id="postForm">
-        <input type="hidden" name="mode" value="write">
+        <input type="hidden" name="mode" value="<?php echo $mode; ?>">
+        <?php if($mode == 'edit'): ?>
+            <input type="hidden" name="id" value="<?php echo $post_id; ?>">
+        <?php endif; ?>
         
         <div class="form-group">
             <label class="form-label">카테고리</label>
             <select name="category" class="form-select" required>
                 <option value="">카테고리를 선택하세요</option>
-                <option value="review">리뷰</option>
-                <option value="recommend">추천</option>
-                <option value="question">질문</option>
+                <option value="review" <?php echo (isset($post_data['category']) && $post_data['category']=='review')?'selected':''; ?>>리뷰</option>
+                <option value="recommend" <?php echo (isset($post_data['category']) && $post_data['category']=='recommend')?'selected':''; ?>>추천</option>
+                <option value="question" <?php echo (isset($post_data['category']) && $post_data['category']=='question')?'selected':''; ?>>질문</option>
             </select>
         </div>
         
         <div class="form-group">
             <label class="form-label">제목</label>
-            <input type="text" name="title" class="form-input" placeholder="제목을 입력하세요" required>
+            <input type="text" name="title" class="form-input" placeholder="제목을 입력하세요" value="<?php echo isset($post_data['title']) ? htmlspecialchars($post_data['title']) : ''; ?>" required>
         </div>
         
         <div class="form-group">
@@ -193,7 +222,7 @@ include './include/header.php';
             </div>
             
             <!-- Editor -->
-            <div id="editor" class="editor-content" contenteditable="true" placeholder="내용을 입력하세요..."></div>
+            <div id="editor" class="editor-content" contenteditable="true" placeholder="내용을 입력하세요..."><?php echo isset($post_data['content']) ? $post_data['content'] : ''; ?></div>
             
             <!-- Hidden Input to store HTML content -->
             <textarea name="content" id="hiddenContent" style="display:none;"></textarea>
@@ -202,7 +231,7 @@ include './include/header.php';
         <div class="btn-group">
             <button type="button" class="btn-cancel" onclick="history.back()">취소</button>
             <button type="button" class="btn-preview" onclick="showPreview()">미리보기</button>
-            <button type="button" class="btn-submit" onclick="submitPost()">작성완료</button>
+            <button type="button" class="btn-submit" onclick="submitPost()"><?php echo ($mode=='edit')?'수정완료':'작성완료'; ?></button>
         </div>
     </form>
 </main>
@@ -225,16 +254,32 @@ function execCmd(command) {
 function uploadImage(input) {
     if(input.files && input.files[0]) {
         const file = input.files[0];
+        const formData = new FormData();
+        formData.append('file', file);
         
-        // Base64 Preview
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            // Insert image at cursor
-            document.getElementById('editor').focus();
-            const html = `<img src="${e.target.result}" style="max-width:100%; margin: 10px 0;">`;
-            document.execCommand('insertHTML', false, html);
-        };
-        reader.readAsDataURL(file);
+        // Upload to Server
+        fetch('/dokju/community_image_upload.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                // Insert image at cursor
+                document.getElementById('editor').focus();
+                const html = `<img src="${data.url}" style="max-width:100%; margin: 10px 0;">`;
+                document.execCommand('insertHTML', false, html);
+            } else {
+                alert('이미지 업로드 실패: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('이미지 업로드 중 오류가 발생했습니다.');
+        });
+        
+        // Reset input for same file selection
+        input.value = '';
     }
 }
 

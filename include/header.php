@@ -114,6 +114,17 @@ include_once __DIR__ . '/db_connect.php';
                      $current_user_name = !empty($row['nickname']) ? $row['nickname'] : $row['name'];
                  }
              }
+             
+             // Notification Logic
+             $noti_count = 0;
+             if(isset($conn)) {
+                 $check_noti = $conn->query("SHOW TABLES LIKE 'notifications'");
+                 if($check_noti && $check_noti->num_rows > 0) {
+                      $my_id = $_SESSION['userid'];
+                      $n_res = $conn->query("SELECT count(*) as cnt FROM notifications WHERE userid='$my_id' AND is_read=0");
+                      if($n_res) $noti_count = $n_res->fetch_assoc()['cnt'];
+                 }
+             }
         }
       ?>
       
@@ -124,6 +135,9 @@ include_once __DIR__ . '/db_connect.php';
       
       const user = dbUser || localStorage.getItem('dokju_current_user');
       const isAdmin = <?php echo $isAdmin ? 'true' : 'false'; ?>;
+      const notiCount = <?php echo isset($noti_count) ? $noti_count : 0; ?>;
+      const badge = notiCount > 0 ? `<span style="background:#e74c3c; color:#fff; font-size:10px; padding:1px 5px; border-radius:10px; margin-left:4px; vertical-align:text-top; line-height:1.2;">${notiCount}</span>` : '';
+      
       let adminLink = isAdmin ? `<a href="/dokju/admin/dashboard.php" style="text-decoration:none; color:#ef6c00; margin-right:10px; font-weight:600;"> ADMIN</a>` : '';
 
       if(user) {
@@ -131,7 +145,7 @@ include_once __DIR__ . '/db_connect.php';
           if(pcMenu) {
               pcMenu.innerHTML = `
                 <span style="color:#888; margin-right:15px; font-weight:500;">${user}님</span>
-                <a href="/dokju/mypage.php" style="text-decoration:none; color:#2b2b2b; margin-right:10px;">MY PAGE</a>
+                <a href="/dokju/mypage.php" style="text-decoration:none; color:#2b2b2b; margin-right:10px;">MY PAGE${badge}</a>
                 
                 <a href="javascript:void(0)" onclick="logoutHeader();" style="text-decoration:none; color:#aaa; font-size:12px; margin-right:20px;">LOGOUT</a>
                 <span style="border-left:1px solid #ddd; height:12px; display:inline-block; vertical-align:middle; margin-right:20px;"></span>

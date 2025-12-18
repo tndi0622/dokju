@@ -44,7 +44,7 @@ if ($action == 'write') {
     $res = $check->get_result();
     $row = $res->fetch_assoc();
     
-    if($row['userid'] !== $userid) {
+    if($row['userid'] !== $userid && $userid !== 'admin') {
         echo "<script>alert('권한이 없습니다.'); history.back();</script>";
         exit;
     }
@@ -70,7 +70,7 @@ if ($action == 'write') {
     $res = $check->get_result();
     $row = $res->fetch_assoc();
     
-    if($row['userid'] !== $userid) {
+    if($row['userid'] !== $userid && $userid !== 'admin') {
         echo "<script>alert('권한이 없습니다.'); history.back();</script>";
         exit;
     }
@@ -93,6 +93,31 @@ if ($action == 'write') {
     $stmt->bind_param("iss", $post_id, $userid, $content);
     
     if($stmt->execute()) {
+        // --- Send Notification ---
+        // Ensure Table Exists (Lightweight check)
+        $conn->query("CREATE TABLE IF NOT EXISTS notifications (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            userid VARCHAR(50) NOT NULL,
+            message TEXT NOT NULL,
+            link VARCHAR(255) NOT NULL,
+            is_read TINYINT(1) DEFAULT 0,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+        // Get Post Owner
+        $p_res = $conn->query("SELECT userid, title FROM community_posts WHERE id = $post_id");
+        if ($p_res && $p_row = $p_res->fetch_assoc()) {
+            $owner = $p_row['userid'];
+            if ($owner !== $userid) {
+                $msg = "내가 쓴 글 [". mb_strimwidth($p_row['title'], 0, 20, '...', 'utf-8') ."]에 새 댓글이 달렸습니다.";
+                $link = "/dokju/community_view.php?id=$post_id";
+                
+                $noti = $conn->prepare("INSERT INTO notifications (userid, message, link) VALUES (?, ?, ?)");
+                $noti->bind_param("sss", $owner, $msg, $link);
+                $noti->execute();
+            }
+        }
+        
         echo "<script>location.href='/dokju/community_view.php?id=$post_id';</script>";
     } else {
         echo "<script>alert('댓글 등록 실패'); history.back();</script>";
@@ -115,7 +140,7 @@ if ($action == 'write') {
     $res = $check->get_result();
     $row = $res->fetch_assoc();
     
-    if($row['comment_writer'] !== $userid && $row['post_writer'] !== $userid) {
+    if($row['comment_writer'] !== $userid && $row['post_writer'] !== $userid && $userid !== 'admin') {
         echo "<script>alert('권한이 없습니다.'); history.back();</script>";
         exit;
     }
@@ -125,6 +150,34 @@ if ($action == 'write') {
     $stmt->execute();
     
     echo "<script>location.href='/dokju/community_view.php?id=$post_id';</script>";
+
+    echo "<script>location.href='/dokju/community_view.php?id=$post_id';</script>";
+
+} elseif ($action == 'edit_comment') {
+    // Edit Comment
+    $comment_id = $_POST['id'];
+    $post_id = $_POST['post_id'];
+    $content = $_POST['content'];
+    
+    // Permission Check
+    $check = $conn->prepare("SELECT userid FROM community_comments WHERE id=?");
+    $check->bind_param("i", $comment_id);
+    $check->execute();
+    $row = $check->get_result()->fetch_assoc();
+    
+    if($row['userid'] !== $userid && $userid !== 'admin') {
+        echo "<script>alert('권한이 없습니다.'); history.back();</script>";
+        exit;
+    }
+    
+    $stmt = $conn->prepare("UPDATE community_comments SET content=? WHERE id=?");
+    $stmt->bind_param("si", $content, $comment_id);
+    
+    if($stmt->execute()) {
+        echo "<script>location.href='/dokju/community_view.php?id=$post_id';</script>";
+    } else {
+        echo "<script>alert('수정 실패'); history.back();</script>";
+    }
 
 } elseif ($action == 'like') {
     // Toggle Like

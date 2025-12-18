@@ -179,7 +179,7 @@ function renderQuestion() {
     const div = document.createElement('div');
     div.className = 'question-box active';
     
-    let html = `<span class="question-num">QUESTION ${currentStep + 1}</span>`;
+    let html = `<span class="question-num">QUESTION ${currentStep + 1} / ${questions.length}</span>`;
     html += `<h3 class="question-text">${q.q}</h3>`;
     
     q.a.forEach((ans) => {

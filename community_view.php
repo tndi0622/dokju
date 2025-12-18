@@ -35,7 +35,8 @@ $display_name = !empty($post['nickname']) ? $post['nickname'] : $post['name'];
 $cat_text = [
     'review' => '리뷰',
     'recommend' => '추천',
-    'question' => '질문'
+    'question' => '질문',
+    'free' => '자유'
 ][$post['category']] ?? $post['category'];
 
 include './include/header.php';
@@ -82,8 +83,8 @@ include './include/header.php';
     </button>
   </div>
 
-  <!-- Edit/Delete Buttons (only for author) -->
-  <?php if (isset($_SESSION['userid']) && $_SESSION['userid'] === $post['userid']): ?>
+  <!-- Edit/Delete Buttons (only for author OR admin) -->
+  <?php if (isset($_SESSION['userid']) && ($_SESSION['userid'] === $post['userid'] || $_SESSION['userid'] === 'admin')): ?>
   <div class="view-btns">
     <a href="/dokju/community_write.php?id=<?php echo $id; ?>" class="btn-sm">수정</a>
     <a href="/dokju/community_process.php?mode=delete&id=<?php echo $id; ?>" 
@@ -120,14 +121,42 @@ include './include/header.php';
               <span class="comment-user"><?php echo $comment_user; ?></span>
               <span class="comment-date">
                 <?php echo date('Y-m-d H:i', strtotime($comment['created_at'])); ?>
-                <?php if (isset($_SESSION['userid']) && ($_SESSION['userid'] === $comment['userid'] || $_SESSION['userid'] === $post['userid'])): ?>
+                <?php 
+                    $is_writer = isset($_SESSION['userid']) && $_SESSION['userid'] === $comment['userid'];
+                    $is_post_owner = isset($_SESSION['userid']) && $_SESSION['userid'] === $post['userid'];
+                    $is_admin = isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin';
+                ?>
+                
+                <?php if ($is_writer || $is_admin): ?>
+                  <a href="javascript:void(0)" onclick="toggleEditComment(<?php echo $comment['id']; ?>)" class="comment-del" style="color:#555;">수정</a>
+                <?php endif; ?>
+                
+                <?php if ($is_writer || $is_post_owner || $is_admin): ?>
                   <a href="/dokju/community_process.php?mode=delete_comment&id=<?php echo $comment['id']; ?>&post_id=<?php echo $id; ?>" 
                      class="comment-del" 
                      onclick="return confirm('댓글을 삭제하시겠습니까?')">삭제</a>
                 <?php endif; ?>
               </span>
             </div>
-            <div class="comment-body"><?php echo nl2br(htmlspecialchars($comment['content'])); ?></div>
+            
+            <!-- Comment Body -->
+            <div id="comment-body-<?php echo $comment['id']; ?>" class="comment-body">
+                <?php echo nl2br(htmlspecialchars($comment['content'])); ?>
+            </div>
+            
+            <!-- Edit Form (Hidden by default) -->
+            <div id="comment-edit-<?php echo $comment['id']; ?>" class="comment-edit-form" style="display:none; margin-top:10px;">
+                <form action="/dokju/community_process.php" method="POST">
+                    <input type="hidden" name="mode" value="edit_comment">
+                    <input type="hidden" name="id" value="<?php echo $comment['id']; ?>">
+                    <input type="hidden" name="post_id" value="<?php echo $id; ?>">
+                    <textarea name="content" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px; min-height:80px; resize:vertical;" required><?php echo htmlspecialchars($comment['content']); ?></textarea>
+                    <div style="margin-top:5px; text-align:right;">
+                        <button type="button" onclick="toggleEditComment(<?php echo $comment['id']; ?>)" style="padding:5px 10px; background:#fff; border:1px solid #ddd; border-radius:4px; cursor:pointer;">취소</button>
+                        <button type="submit" style="padding:5px 10px; background:#2b2b2b; color:#fff; border:none; border-radius:4px; cursor:pointer;">수정 완료</button>
+                    </div>
+                </form>
+            </div>
           </li>
         <?php endwhile; ?>
       <?php else: ?>

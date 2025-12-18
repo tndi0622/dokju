@@ -33,6 +33,14 @@ if($tab == 'wish') {
     }
 }
 
+// Mark Alerts Read (Before Header Load)
+if($tab == 'alerts' && isset($userid)) {
+    $check_exists = $conn->query("SHOW TABLES LIKE 'notifications'");
+    if($check_exists && $check_exists->num_rows > 0) {
+         $conn->query("UPDATE notifications SET is_read = 1 WHERE userid = '$userid'");
+    }
+}
+
 include './include/header.php'; 
 ?>
 <link rel="stylesheet" href="/dokju/css/member.css?v=<?php echo time(); ?>">
@@ -45,6 +53,9 @@ include './include/header.php';
        <ul>
           <li><a href="?tab=order" class="<?php echo ($tab=='order')?'active':''; ?>">주문 내역</a></li>
           <li><a href="?tab=wish" class="<?php echo ($tab=='wish')?'active':''; ?>">관심 상품</a></li>
+          <li><a href="?tab=posts" class="<?php echo ($tab=='posts')?'active':''; ?>">내가 쓴 글</a></li>
+          <li><a href="?tab=comments" class="<?php echo ($tab=='comments')?'active':''; ?>">내가 쓴 댓글</a></li>
+          <li><a href="?tab=alerts" class="<?php echo ($tab=='alerts')?'active':''; ?>">알림</a></li>
           <li><a href="?tab=info" class="<?php echo ($tab=='info')?'active':''; ?>">내 정보</a></li>
        </ul>
     </nav>
@@ -248,6 +259,109 @@ include './include/header.php';
              <?php endif; ?>
           </div>
        </section>
+
+       <?php elseif($tab == 'posts'): ?>
+         <?php
+           $post_stmt = $conn->prepare("
+               SELECT p.*, 
+               (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id) as cmt_cnt 
+               FROM community_posts p 
+               WHERE userid = ? 
+               ORDER BY created_at DESC
+           ");
+           $post_stmt->bind_param("s", $userid);
+           $post_stmt->execute();
+           $posts = $post_stmt->get_result();
+         ?>
+         <section class="my-section">
+            <h3 class="my-title">내가 쓴 글 (<?php echo $posts->num_rows; ?>)</h3>
+            <?php if($posts->num_rows > 0): ?>
+                <ul class="mypage-post-list" style="list-style:none; padding:0;">
+                <?php while($p = $posts->fetch_assoc()): ?>
+                    <li onclick="location.href='/dokju/community_view.php?id=<?php echo $p['id']; ?>'" style="cursor:pointer; border-bottom:1px solid #eee; padding:20px 0; transition:background 0.2s;">
+                        <div style="font-size:16px; font-weight:600; margin-bottom:8px; color:#333; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                            <?php echo htmlspecialchars($p['title']); ?>
+                            <?php if($p['cmt_cnt'] > 0): ?>
+                                <span style="color:#ef6c00; font-size:14px; margin-left:5px;">[<?php echo $p['cmt_cnt']; ?>]</span>
+                            <?php endif; ?>
+                        </div>
+                        <div style="font-size:13px; color:#999;">
+                            <span style="color:#ef6c00; margin-right:5px;">[<?php echo $p['category']=='free'?'자유':($p['category']=='review'?'리뷰':($p['category']=='question'?'질문':'추천')); ?>]</span>
+                            <?php echo date('Y-m-d', strtotime($p['created_at'])); ?> 
+                            <span style="margin:0 5px;">·</span> 조회 <?php echo $p['views']; ?> 
+                            <span style="margin:0 5px;">·</span> 추천 <?php echo $p['likes']; ?>
+                        </div>
+                    </li>
+                <?php endwhile; ?>
+                </ul>
+            <?php else: ?>
+                <div class="empty-msg">작성한 게시글이 없습니다.</div>
+            <?php endif; ?>
+         </section>
+
+
+
+       <?php elseif($tab == 'comments'): ?>
+         <?php
+           $cmt_stmt = $conn->prepare("SELECT c.*, p.title as post_title FROM community_comments c JOIN community_posts p ON c.post_id = p.id WHERE c.userid = ? ORDER BY c.created_at DESC");
+           $cmt_stmt->bind_param("s", $userid);
+           $cmt_stmt->execute();
+           $comments = $cmt_stmt->get_result();
+         ?>
+         <section class="my-section">
+            <h3 class="my-title">내가 쓴 댓글 (<?php echo $comments->num_rows; ?>)</h3>
+            <?php if($comments->num_rows > 0): ?>
+                <ul class="mypage-post-list" style="list-style:none; padding:0;">
+                <?php while($c = $comments->fetch_assoc()): ?>
+                    <li onclick="location.href='/dokju/community_view.php?id=<?php echo $c['post_id']; ?>'" style="cursor:pointer; border-bottom:1px solid #eee; padding:20px 0; transition:background 0.2s;">
+                        <div style="font-size:15px; margin-bottom:8px; color:#444;">
+                            <?php echo htmlspecialchars($c['content']); ?>
+                        </div>
+                        <div style="font-size:13px; color:#999;">
+                            원문: <span style="color:#2b2b2b; font-weight:600;"><?php echo htmlspecialchars($c['post_title']); ?></span>
+                            <span style="margin:0 5px;">·</span> <?php echo date('Y-m-d H:i', strtotime($c['created_at'])); ?>
+                        </div>
+                    </li>
+                <?php endwhile; ?>
+                </ul>
+            <?php else: ?>
+                <div class="empty-msg">작성한 댓글이 없습니다.</div>
+            <?php endif; ?>
+         </section>
+
+       <?php elseif($tab == 'alerts'): ?>
+         <?php
+           // Try to fetch notifications (Table might not exist yet)
+           $alerts_exist = $conn->query("SHOW TABLES LIKE 'notifications'")->num_rows > 0;
+           $alerts = [];
+           
+           if($alerts_exist) {
+               $noti_stmt = $conn->prepare("SELECT * FROM notifications WHERE userid = ? ORDER BY created_at DESC");
+               $noti_stmt->bind_param("s", $userid);
+               $noti_stmt->execute();
+               $res = $noti_stmt->get_result();
+               while($row = $res->fetch_assoc()) $alerts[] = $row;
+           }
+         ?>
+         <section class="my-section">
+            <h3 class="my-title">알림 (<?php echo count($alerts); ?>)</h3>
+            <?php if(count($alerts) > 0): ?>
+                <ul class="mypage-post-list" style="list-style:none; padding:0;">
+                <?php foreach($alerts as $not): ?>
+                    <li onclick="location.href='<?php echo $not['link']; ?>'" style="cursor:pointer; border-bottom:1px solid #eee; padding:20px 0; transition:background 0.2s;">
+                        <div style="font-size:15px; margin-bottom:5px; color:#333;">
+                            <?php echo htmlspecialchars($not['message']); ?>
+                        </div>
+                        <div style="font-size:12px; color:#999;">
+                            <?php echo date('Y-m-d H:i', strtotime($not['created_at'])); ?>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <div class="empty-msg">새로운 알림이 없습니다.</div>
+            <?php endif; ?>
+         </section>
 
        <!-- Info Tab (New) -->
        <?php elseif($tab == 'info'): ?>

@@ -11,6 +11,9 @@
           <span style="display:block; margin-top:12px; font-size:14px; color:#888;">
             고객센터 운영시간 : 평일 10:00 ~ 17:00<br>
             (점심 12:00 ~ 13:00)
+            <?php if(isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin'): ?>
+              <br><a href="/dokju/admin/dashboard.php" style="color:red; text-decoration:none; font-weight:bold; margin-top:10px; display:inline-block;">[관리자 페이지]</a>
+            <?php endif; ?>
           </span>
         </p>
       </div>

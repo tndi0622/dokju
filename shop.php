@@ -79,6 +79,8 @@ include './include/header.php';
      <p style="color:#666; font-size:16px; margin-top:10px;">엄선된 프리미엄 사케 컬렉션을 만나보세요</p>
   </div>
 
+
+
   <div class="shop-controls">
      <div class="filters">
          <a href="?category=ALL" class="<?php echo ($category=='ALL' || $category=='전체')?'active':''; ?>">전체</a>

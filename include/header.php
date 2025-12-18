@@ -1,4 +1,15 @@
-<?php if(session_status() === PHP_SESSION_NONE) session_start(); ?>
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check Auto Login
+if (!isset($_SESSION['userid']) && isset($_COOKIE['dokju_auto_login'])) {
+    $_SESSION['userid'] = $_COOKIE['dokju_auto_login'];
+}
+
+include_once __DIR__ . '/db_connect.php';
+?>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -121,7 +132,7 @@
               pcMenu.innerHTML = `
                 <span style="color:#888; margin-right:15px; font-weight:500;">${user}님</span>
                 <a href="/dokju/mypage.php" style="text-decoration:none; color:#2b2b2b; margin-right:10px;">MY PAGE</a>
-                ${adminLink}
+                
                 <a href="javascript:void(0)" onclick="logoutHeader();" style="text-decoration:none; color:#aaa; font-size:12px; margin-right:20px;">LOGOUT</a>
                 <span style="border-left:1px solid #ddd; height:12px; display:inline-block; vertical-align:middle; margin-right:20px;"></span>
                 <a href="/dokju/cart.php" style="text-decoration:none; color:#fff; background:#2b2b2b; padding:6px 14px; border-radius:2px; font-size:13px;">CART</a>

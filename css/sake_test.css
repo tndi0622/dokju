@@ -1,0 +1,273 @@
+/* Sake Test Container */
+.test-container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 40px;
+    text-align: center;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    color: #333;
+}
+
+.test-header h2 {
+    font-size: 32px;
+    margin-bottom: 12px;
+    color: #2b2b2b;
+    letter-spacing: -0.5px;
+}
+
+.test-header p {
+    color: #888;
+    margin-bottom: 40px;
+    font-size: 16px;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    margin-bottom: 50px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #2b2b2b;
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Question Logic */
+.question-box {
+    display: none;
+    animation: fadeIn 0.6s ease;
+}
+
+.question-box.active {
+    display: block;
+}
+
+.question-num {
+    font-size: 14px;
+    color: #ef6c00;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: block;
+    letter-spacing: 1px;
+}
+
+.question-text {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 50px;
+    line-height: 1.5;
+    word-break: keep-all;
+    color: #1a1a1a;
+}
+
+.answer-btn {
+    display: block;
+    width: 100%;
+    padding: 24px;
+    margin-bottom: 16px;
+    border: 2px solid #f5f5f5;
+    border-radius: 12px;
+    background: #fff;
+    color: #444;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    font-weight: 500;
+}
+
+.answer-btn:hover {
+    border-color: #2b2b2b;
+    background: #2b2b2b;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.test-footer {
+    margin-top: 40px;
+    font-size: 13px;
+    color: #aaa;
+}
+
+/* Result Section */
+.result-container {
+    display: none;
+    animation: fadeIn 0.8s ease;
+}
+
+.result-content {
+    padding: 20px 0;
+}
+
+.result-type {
+    font-size: 18px;
+    color: #ef6c00;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.result-title {
+    font-size: 36px;
+    margin-bottom: 24px;
+    color: #1a1a1a;
+    line-height: 1.3;
+}
+
+.result-desc {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 50px;
+    background: #fafafa;
+    padding: 30px;
+    border-radius: 12px;
+    word-break: keep-all;
+}
+
+/* Product Cards in Result */
+.rec-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.rec-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+
+.rec-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.rec-img {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+    background: #f9f9f9;
+    padding: 10px;
+}
+
+.rec-info {
+    padding: 15px;
+    text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rec-name {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.rec-price {
+    font-size: 14px;
+    color: #ef6c00;
+}
+
+/* Buttons */
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-restart {
+    padding: 14px 30px;
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #555;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+
+.btn-restart:hover {
+    background: #f5f5f5;
+}
+
+.btn-shop {
+    padding: 14px 40px;
+    background: #2b2b2b;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-shop:hover {
+    background: #4a3b32;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 600px) {
+    .test-container {
+        margin: 30px 15px;
+        padding: 30px 20px;
+    }
+
+    .rec-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rec-card {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .rec-img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .rec-info {
+        text-align: left;
+        align-items: flex-start;
+    }
+}

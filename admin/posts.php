@@ -36,6 +36,7 @@ $posts = $conn->query("SELECT p.*, u.name, u.nickname,
                     <li><a href="/dokju/admin/dashboard.php"> 대시보드</a></li>
                     <li><a href="/dokju/admin/products.php"> 상품 관리</a></li>
                     <li><a href="/dokju/admin/users.php"> 회원 관리</a></li>
+                    <li><a href="/dokju/admin/orders.php"> 배송 관리</a></li>
                     <li><a href="/dokju/admin/posts.php" class="active"> 커뮤니티 관리</a></li>
                     <li><a href="/dokju/index.php" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;"> 사이트로 이동</a></li>
                 </ul>

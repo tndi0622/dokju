@@ -54,6 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Login Success
                 $_SESSION['userid'] = $userid;
                 
+                // Auto Login
+                if(isset($_POST['auto_login'])) {
+                    setcookie('dokju_auto_login', $userid, time() + (86400 * 30), "/");
+                }
+                
                 $display_name = !empty($row['nickname']) ? $row['nickname'] : $row['name'];
                 echo "<script>
                         localStorage.setItem('dokju_current_user', '$display_name');

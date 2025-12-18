@@ -1,6 +1,7 @@
 <?php
 session_start();
 session_destroy();
+setcookie('dokju_auto_login', '', time() - 3600, "/");
 ?>
 <script>
     localStorage.removeItem('dokju_current_user');

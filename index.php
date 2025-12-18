@@ -18,11 +18,11 @@
           </div>
       
           <div class="slide">
-            <img src="/dokju/images/slider_event.jpg" alt="이벤트">
+            <img src="/dokju/images/slider_event.jpg" alt="사케 추천">
             <div class="slide-text">
-              <h2>SEASON EVENT</h2>
-              <p>겨울 한정 사케 기획전<br>지금만 만날 수 있는 깊은 풍미</p>
-              <a href="/dokju/shop.php" class="btn">이벤트 보기</a>
+              <h2>FIND YOUR SAKE</h2>
+              <p>나에게 딱 맞는 술은 무엇일까?<br>1분 만에 취향 찾기</p>
+              <a href="/dokju/sake_test.php" class="btn">테스트 시작하기</a>
             </div>
           </div>
       

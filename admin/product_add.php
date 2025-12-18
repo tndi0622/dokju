@@ -62,7 +62,17 @@ if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
                     
                     <div class="form-group">
                         <label>종류</label>
-                        <input type="text" name="type" class="form-control" placeholder="예: 준마이 다이긴조">
+                        <select name="type" class="form-control" required>
+                            <option value="">선택하세요</option>
+                            <option value="준마이슈">준마이슈</option>
+                            <option value="혼조조">혼조조</option>
+                            <option value="긴조">긴조</option>
+                            <option value="다이긴조">다이긴조</option>
+                            <option value="준마이 긴조">준마이 긴조</option>
+                            <option value="준마이 다이긴조">준마이 다이긴조</option>
+                            <option value="후츠슈">후츠슈</option>
+                            <option value="기타">기타</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -78,6 +88,11 @@ if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
                     <div class="form-group">
                         <label>가격 *</label>
                         <input type="number" name="price" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>재고 수량 *</label>
+                        <input type="number" name="stock" class="form-control" value="50" required>
                     </div>
                     
                     <div class="form-group">

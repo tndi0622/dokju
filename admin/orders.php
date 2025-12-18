@@ -176,20 +176,22 @@ $result = $conn->query($sql);
                                         <span class="badge-status st-<?php echo $row['status']; ?>"><?php echo $st_text; ?></span>
                                     </td>
                                     <td>
-                                        <button onclick="viewDetails('<?php echo $row['order_uid']; ?>')" style="padding:6px 12px; border:1px solid #ddd; background:#eee; cursor:pointer; margin-right:5px;">상세</button>
-                                        
-                                        <form method="POST" action="" class="status-form">
-                                            <input type="hidden" name="action" value="update_status">
-                                            <input type="hidden" name="order_uid" value="<?php echo $row['order_uid']; ?>">
-                                            <select name="status" class="status-select" onchange="if(confirm('상태를 변경하시겠습니까?')) this.form.submit(); else this.value='<?php echo $row['status']; ?>';">
-                                                <option value="PENDING" <?php if($row['status']=='PENDING') echo 'selected'; ?>>대기</option>
-                                                <option value="PAID" <?php if($row['status']=='PAID') echo 'selected'; ?>>완료</option>
-                                                <option value="PREPARING" <?php if($row['status']=='PREPARING') echo 'selected'; ?>>배송준비</option>
-                                                <option value="SHIPPING" <?php if($row['status']=='SHIPPING') echo 'selected'; ?>>배송중</option>
-                                                <option value="DELIVERED" <?php if($row['status']=='DELIVERED') echo 'selected'; ?>>배송완료</option>
-                                                <option value="CANCELLED" <?php if($row['status']=='CANCELLED') echo 'selected'; ?>>취소</option>
-                                            </select>
-                                        </form>
+                                        <div style="display:flex; gap:5px; align-items:center;">
+                                            <button onclick="viewDetails('<?php echo $row['order_uid']; ?>')" style="padding:6px 12px; border:1px solid #ddd; background:#eee; cursor:pointer; margin-right:5px; white-space:nowrap;">상세</button>
+                                            
+                                            <form method="POST" action="" class="status-form" style="margin:0;">
+                                                <input type="hidden" name="action" value="update_status">
+                                                <input type="hidden" name="order_uid" value="<?php echo $row['order_uid']; ?>">
+                                                <select name="status" class="status-select" onchange="if(confirm('상태를 변경하시겠습니까?')) this.form.submit(); else this.value='<?php echo $row['status']; ?>';">
+                                                    <option value="PENDING" <?php if($row['status']=='PENDING') echo 'selected'; ?>>대기</option>
+                                                    <option value="PAID" <?php if($row['status']=='PAID') echo 'selected'; ?>>완료</option>
+                                                    <option value="PREPARING" <?php if($row['status']=='PREPARING') echo 'selected'; ?>>배송준비</option>
+                                                    <option value="SHIPPING" <?php if($row['status']=='SHIPPING') echo 'selected'; ?>>배송중</option>
+                                                    <option value="DELIVERED" <?php if($row['status']=='DELIVERED') echo 'selected'; ?>>배송완료</option>
+                                                    <option value="CANCELLED" <?php if($row['status']=='CANCELLED') echo 'selected'; ?>>취소</option>
+                                                </select>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endwhile; ?>
@@ -217,6 +219,39 @@ $result = $conn->query($sql);
         </div>
     </div>
 
+    <!-- Floating Action Button -->
+    <a href="/dokju/index.php" class="fab-site-link" title="사이트로 이동">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </a>
+    <style>
+        .fab-site-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #2b2b2b;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .fab-site-link:hover {
+            transform: translateY(-5px);
+            background: #444;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+        .admin-table th, .admin-table td {
+            white-space: nowrap;
+        }
+    </style>
+    
     <script>
     function viewDetails(orderUid) {
         document.getElementById('orderModal').style.display = 'block';

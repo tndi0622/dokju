@@ -74,7 +74,16 @@ if (!$product) {
                     
                     <div class="form-group">
                         <label>종류</label>
-                        <input type="text" name="type" class="form-control" value="<?php echo htmlspecialchars($product['type']); ?>">
+                        <select name="type" class="form-control" required>
+                            <option value="">선택하세요</option>
+                            <?php 
+                            $types = ['준마이 다이긴조', '다이긴조', '준마이 긴조', '긴조', '준마이슈', '혼조조', '후츠슈', '기타'];
+                            foreach($types as $t) {
+                                $selected = ($product['type'] == $t) ? 'selected' : '';
+                                echo "<option value='$t' $selected>$t</option>";
+                            }
+                            ?>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -90,6 +99,11 @@ if (!$product) {
                     <div class="form-group">
                         <label>가격 *</label>
                         <input type="number" name="price" class="form-control" value="<?php echo $product['price']; ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>재고 수량 *</label>
+                        <input type="number" name="stock" class="form-control" value="<?php echo isset($product['stock']) ? $product['stock'] : 0; ?>" required>
                     </div>
                     
                     <div class="form-group">

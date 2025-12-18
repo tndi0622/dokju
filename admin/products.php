@@ -8,6 +8,12 @@ if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
     exit;
 }
 
+// Add stock column check
+$check_col = $conn->query("SHOW COLUMNS FROM products LIKE 'stock'");
+if($check_col->num_rows == 0) {
+    $conn->query("ALTER TABLE products ADD COLUMN stock INT DEFAULT 50");
+}
+
 // Get all products
 $products = $conn->query("SELECT * FROM products ORDER BY id DESC");
 ?>
@@ -63,6 +69,7 @@ $products = $conn->query("SELECT * FROM products ORDER BY id DESC");
                             <th>상품명</th>
                             <th>지역</th>
                             <th>종류</th>
+                            <th>재고</th>
                             <th>가격</th>
                             <th>관리</th>
                         </tr>
@@ -79,6 +86,10 @@ $products = $conn->query("SELECT * FROM products ORDER BY id DESC");
                             <td><?php echo htmlspecialchars($product['product_name']); ?></td>
                             <td><?php echo htmlspecialchars($product['region']); ?></td>
                             <td><?php echo htmlspecialchars($product['type']); ?></td>
+                            <td style="<?php echo $product['stock'] <= 0 ? 'color:red; font-weight:bold;' : ''; ?>">
+                                <?php echo number_format($product['stock']); ?>개
+                                <?php if($product['stock'] <= 0) echo '(품절)'; ?>
+                            </td>
                             <td><?php echo number_format($product['price']); ?>원</td>
                             <td>
                                 <a href="/dokju/admin/product_edit.php?id=<?php echo $product['id']; ?>" 
@@ -94,5 +105,34 @@ $products = $conn->query("SELECT * FROM products ORDER BY id DESC");
             </div>
         </main>
     </div>
+    <!-- Floating Action Button -->
+    <a href="/dokju/index.php" class="fab-site-link" title="사이트로 이동">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </a>
+    <style>
+        .fab-site-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #2b2b2b;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .fab-site-link:hover {
+            transform: translateY(-5px);
+            background: #444;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+    </style>
 </body>
 </html>

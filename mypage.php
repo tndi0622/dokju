@@ -20,10 +20,38 @@ $u = $res->fetch_assoc();
 // Tab Logic
 $tab = isset($_GET['tab']) ? $_GET['tab'] : 'order';
 
+// Pagination Helper
+$page_num = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+
+function renderPagination($total, $per_page, $curr, $tab) {
+    if($total == 0) return;
+    $total_pages = ceil($total / $per_page);
+    if($total_pages <= 1) return;
+    
+    echo '<div class="pagination">';
+    for($i=1; $i<=$total_pages; $i++) {
+        $active = ($i == $curr) ? 'active' : '';
+        echo "<a href='?tab=$tab&page=$i' class='$active'>$i</a>";
+    }
+    echo '</div>';
+    echo '<style>.pagination{margin-top:40px; text-align:center;} .pagination a{display:inline-block; margin:0 4px; padding:8px 14px; background:#fff; color:#555; text-decoration:none; border:1px solid #ddd; border-radius:4px; font-size:14px; transition:all 0.2s;} .pagination a.active{background:#2b2b2b; color:#fff; border-color:#2b2b2b; font-weight:600;} .pagination a:hover:not(.active){background:#f5f5f5;}</style>';
+}
+
 // Fetch Wishlist if needed
 $wish_items = [];
+$total_wish = 0;
 if($tab == 'wish') {
-    $w_sql = "SELECT p.* FROM wishlists w JOIN products p ON w.product_id = p.id WHERE w.user_id = ? ORDER BY w.created_at DESC";
+    $limit = 9;
+    $offset = ($page_num - 1) * $limit;
+    
+    // Count
+    $wc_sql = "SELECT count(*) as cnt FROM wishlists WHERE user_id = ?";
+    $wc_stmt = $conn->prepare($wc_sql);
+    $wc_stmt->bind_param("i", $u['id']);
+    $wc_stmt->execute();
+    $total_wish = $wc_stmt->get_result()->fetch_assoc()['cnt'];
+    
+    $w_sql = "SELECT p.* FROM wishlists w JOIN products p ON w.product_id = p.id WHERE w.user_id = ? ORDER BY w.created_at DESC LIMIT $offset, $limit";
     $w_stmt = $conn->prepare($w_sql);
     $w_stmt->bind_param("i", $u['id']);
     $w_stmt->execute();
@@ -182,8 +210,18 @@ include './include/header.php';
        <!-- Order History Tab -->
        <?php if($tab == 'order'): ?>
        <?php 
+           $limit = 5;
+           $offset = ($page_num - 1) * $limit;
+           
+           // Count
+           $oc_sql = "SELECT count(*) as cnt FROM orders WHERE userid = ?";
+           $oc_stmt = $conn->prepare($oc_sql);
+           $oc_stmt->bind_param("s", $userid);
+           $oc_stmt->execute();
+           $total_orders = $oc_stmt->get_result()->fetch_assoc()['cnt'];
+
            // Fetch Orders
-           $ord_sql = "SELECT * FROM orders WHERE userid = ? ORDER BY created_at DESC";
+           $ord_sql = "SELECT * FROM orders WHERE userid = ? ORDER BY created_at DESC LIMIT $offset, $limit";
            $ord_stmt = $conn->prepare($ord_sql);
            $ord_stmt->bind_param("s", $userid);
            $ord_stmt->execute();
@@ -258,23 +296,34 @@ include './include/header.php';
                  </div>
              <?php endif; ?>
           </div>
+          <?php renderPagination($total_orders, $limit, $page_num, 'order'); ?>
        </section>
 
        <?php elseif($tab == 'posts'): ?>
          <?php
+           $limit = 5;
+           $offset = ($page_num - 1) * $limit;
+           
+           // Count
+           $pc_stmt = $conn->prepare("SELECT COUNT(*) as cnt FROM community_posts WHERE userid = ?");
+           $pc_stmt->bind_param("s", $userid);
+           $pc_stmt->execute();
+           $total_posts = $pc_stmt->get_result()->fetch_assoc()['cnt'];
+           
            $post_stmt = $conn->prepare("
                SELECT p.*, 
                (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id) as cmt_cnt 
                FROM community_posts p 
                WHERE userid = ? 
                ORDER BY created_at DESC
+               LIMIT $offset, $limit
            ");
            $post_stmt->bind_param("s", $userid);
            $post_stmt->execute();
            $posts = $post_stmt->get_result();
          ?>
          <section class="my-section">
-            <h3 class="my-title">내가 쓴 글 (<?php echo $posts->num_rows; ?>)</h3>
+            <h3 class="my-title">내가 쓴 글 (<?php echo $total_posts; ?>)</h3>
             <?php if($posts->num_rows > 0): ?>
                 <ul class="mypage-post-list" style="list-style:none; padding:0;">
                 <?php while($p = $posts->fetch_assoc()): ?>
@@ -294,6 +343,7 @@ include './include/header.php';
                     </li>
                 <?php endwhile; ?>
                 </ul>
+                <?php renderPagination($total_posts, $limit, $page_num, 'posts'); ?>
             <?php else: ?>
                 <div class="empty-msg">작성한 게시글이 없습니다.</div>
             <?php endif; ?>
@@ -331,12 +381,23 @@ include './include/header.php';
 
        <?php elseif($tab == 'alerts'): ?>
          <?php
-           // Try to fetch notifications (Table might not exist yet)
-           $alerts_exist = $conn->query("SHOW TABLES LIKE 'notifications'")->num_rows > 0;
+           $limit = 5;
+           $offset = ($page_num - 1) * $limit;
+           
+           $total_alerts = 0;
            $alerts = [];
            
+           // Check table
+           $alerts_exist = $conn->query("SHOW TABLES LIKE 'notifications'")->num_rows > 0;
+           
            if($alerts_exist) {
-               $noti_stmt = $conn->prepare("SELECT * FROM notifications WHERE userid = ? ORDER BY created_at DESC");
+               // Count
+               $ac_stmt = $conn->prepare("SELECT count(*) as cnt FROM notifications WHERE userid = ?");
+               $ac_stmt->bind_param("s", $userid);
+               $ac_stmt->execute();
+               $total_alerts = $ac_stmt->get_result()->fetch_assoc()['cnt'];
+               
+               $noti_stmt = $conn->prepare("SELECT * FROM notifications WHERE userid = ? ORDER BY created_at DESC LIMIT $offset, $limit");
                $noti_stmt->bind_param("s", $userid);
                $noti_stmt->execute();
                $res = $noti_stmt->get_result();
@@ -344,7 +405,13 @@ include './include/header.php';
            }
          ?>
          <section class="my-section">
-            <h3 class="my-title">알림 (<?php echo count($alerts); ?>)</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+               <h3 class="my-title" style="margin:0; border:none; padding:0;">알림 (<?php echo $total_alerts; ?>)</h3>
+               <?php if($total_alerts > 0): ?>
+                   <button onclick="deleteAllAlerts()" style="padding:6px 12px; background:#f5f5f5; border:1px solid #ddd; border-radius:4px; font-size:13px; cursor:pointer;">전체 삭제</button>
+               <?php endif; ?>
+            </div>
+            
             <?php if(count($alerts) > 0): ?>
                 <ul class="mypage-post-list" style="list-style:none; padding:0;">
                 <?php foreach($alerts as $not): ?>
@@ -358,10 +425,27 @@ include './include/header.php';
                     </li>
                 <?php endforeach; ?>
                 </ul>
+                <?php renderPagination($total_alerts, $limit, $page_num, 'alerts'); ?>
             <?php else: ?>
                 <div class="empty-msg">새로운 알림이 없습니다.</div>
             <?php endif; ?>
          </section>
+         
+         <script>
+           function deleteAllAlerts() {
+               if(!confirm('모든 알림을 삭제하시겠습니까?')) return;
+               
+               const formData = new FormData();
+               formData.append('mode', 'delete_all');
+               
+               fetch('/dokju/ajax_alert_process.php', { method:'POST', body:formData })
+               .then(res => res.json())
+               .then(data => {
+                   if(data.success) location.reload();
+                   else alert('삭제 실패');
+               });
+           }
+         </script>
 
        <!-- Info Tab (New) -->
        <?php elseif($tab == 'info'): ?>
@@ -393,120 +477,6 @@ include './include/header.php';
        </section>
 
        <style>
-       /* New Order Card Styles */
-       .order-card-new {
-           background-color: #f7f3eb; /* Beige Background */
-           border-radius: 4px;
-           padding: 25px;
-           margin-bottom: 20px;
-       }
-       
-       .card-header {
-           font-size: 14px;
-           color: #999;
-           margin-bottom: 20px;
-           font-family: 'Inter', sans-serif;
-           border-bottom: 1px solid #e0dfd5; /* Subtle divider below header */
-           padding-bottom: 10px;
-       }
-       
-       .card-header .divider {
-           margin: 0 8px;
-           color: #ddd;
-       }
-       
-       .card-body {
-           display: flex;
-           align-items: center;
-           flex-direction: row; /* Force horizontal */
-       }
-       
-       .img-wrapper {
-           flex: 0 0 100px; /* Fixed width, don't grow or shrink */
-           width: 100px;
-           height: 100px;
-           background: #fff;
-           margin-right: 30px;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           border: 1px solid #eee;
-           overflow: hidden; /* Cut off if too big */
-       }
-       
-       .img-wrapper img {
-           max-width: 100%;
-           max-height: 100%;
-           object-fit: contain;
-           width: auto !important; /* Override potential global styles */
-           height: auto !important;
-       }
-       
-       .info-wrapper {
-           flex: 1;
-           display: flex;
-           flex-direction: column;
-           gap: 8px;
-       }
-       
-       .p-name {
-           font-size: 18px;
-           font-weight: 600;
-           color: #2b2b2b;
-       }
-       
-       .p-price {
-           font-size: 16px;
-           font-weight: 500;
-           color: #444;
-       }
-       
-       .p-status {
-           font-size: 14px;
-           font-weight: 600;
-       }
-       
-       .badge {
-           position: absolute;
-           bottom: 0;
-           right: 0;
-           background: rgba(0,0,0,0.6);
-           color: #fff;
-           font-size: 10px;
-           padding: 2px 5px;
-       }
-       
-       .action-wrapper {
-           flex: 0 0 auto; /* Don't shrink */
-           margin-left: 20px;
-       }
-       
-       .btn-track {
-           display: inline-block;
-           padding: 10px 20px;
-           border: 1px solid #ddd;
-           background: #fff;
-           color: #555;
-           text-decoration: none;
-           font-size: 14px;
-           border-radius: 4px;
-           transition: all 0.2s;
-           white-space: nowrap; /* Prevent text wrap */
-       }
-       
-       .btn-track:hover {
-           border-color: #aaa;
-           color: #2b2b2b;
-       }
-       
-       .empty-msg {
-           padding: 80px 0;
-           text-align: center;
-           color: #999;
-           border: 1px solid #eee;
-           background: #fff;
-       }
-
        /* Info Tab Styles */
        .info-card {
            border: 1px solid #eee;
@@ -551,7 +521,7 @@ include './include/header.php';
        </style>
        <?php elseif($tab == 'wish'): ?>
        <section class="my-section">
-          <h3 class="my-title">관심 상품 (<?php echo count($wish_items); ?>)</h3>
+          <h3 class="my-title">관심 상품 (<?php echo $total_wish; ?>)</h3>
           
           <?php if(count($wish_items) > 0): ?>
           <div class="product-grid" style="grid-template-columns: repeat(3, 1fr); gap:20px;">
@@ -572,6 +542,7 @@ include './include/header.php';
             </div>
             <?php endforeach; ?>
           </div>
+          <?php renderPagination($total_wish, $limit, $page_num, 'wish'); ?>
           <?php else: ?>
           <div style="padding:40px; text-align:center; color:#999; border:1px solid #eee;">
              관심 등록한 상품이 없습니다.

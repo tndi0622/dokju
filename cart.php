@@ -47,9 +47,30 @@
 <script>
   // Key for localStorage
   const CART_KEY = 'dokju_cart';
+  let productStockInfo = {};
 
   function loadCart() {
       const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+      if(cart.length === 0) {
+          renderCartHtml([], {}); 
+          return;
+      }
+      
+      const ids = cart.map(c => c.id);
+      
+      // Fetch latest info (Stock, Price)
+      fetch('/dokju/ajax_get_cart_info.php', {
+          method: 'POST',
+          body: JSON.stringify({ ids: ids })
+      })
+      .then(res => res.json())
+      .then(data => {
+          productStockInfo = data.items;
+          renderCartHtml(cart, productStockInfo);
+      });
+  }
+  
+  function renderCartHtml(cart, dbItems) {
       const listEl = document.getElementById('cart-list');
       const wrapEl = document.getElementById('cart-content-wrapper');
       const emptyEl = document.getElementById('empty-cart-msg');
@@ -65,37 +86,59 @@
       
       let html = '';
       let totalPrice = 0;
+      let needsUpdate = false;
       
       cart.forEach((item, index) => {
+          const dbItem = dbItems[item.id];
+          if(!dbItem) return; // Product might be deleted
+          
+          // Sync Price & Update Stock check
+          item.price = dbItem.price; // Update price just in case
+          const stock = dbItem.stock;
+          let isSoldOut = stock <= 0;
+          let stockAlert = '';
+          
+          if(!isSoldOut && item.qty > stock) {
+              item.qty = stock;
+              needsUpdate = true;
+              stockAlert = `<div style="color:red; font-size:12px; margin-top:5px;">재고 부족으로 ${stock}개로 조정되었습니다.</div>`;
+          }
+          
           let itemTotal = item.price * item.qty;
-          totalPrice += itemTotal;
+          if(!isSoldOut) totalPrice += itemTotal;
           
           html += `
-            <div class="cart-item">
+            <div class="cart-item" style="${isSoldOut ? 'opacity:0.5; background:#f9f9f9;' : ''}">
               <div class="cart-img">
                 <a href="/dokju/product_view.php?id=${item.id}" style="display:block; height:100%;">
-                    <img src="${item.image}" alt="${item.name}">
+                    <img src="${dbItem.image}" alt="${dbItem.product_name}">
                 </a>
               </div>
               <div class="cart-info">
-                <a href="/dokju/product_view.php?id=${item.id}" class="cart-name">${item.name}</a>
+                <a href="/dokju/product_view.php?id=${item.id}" class="cart-name">${dbItem.product_name}</a>
                 <span class="cart-price">${item.price.toLocaleString()}원</span>
+                ${isSoldOut ? '<span style="color:red; font-weight:bold; margin-left:5px;">(품절)</span>' : ''}
               </div>
               <div class="cart-qty">
-                 <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                 <button class="qty-btn" onclick="changeQty(${index}, -1)" ${isSoldOut?'disabled':''}>-</button>
                  <div class="qty-val">${item.qty}</div>
-                 <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                 <button class="qty-btn" onclick="changeQty(${index}, 1)" ${isSoldOut?'disabled':''}>+</button>
               </div>
-              <div class="cart-total-price">${itemTotal.toLocaleString()}원</div>
+              <div class="cart-total-price">${isSoldOut ? '0원' : itemTotal.toLocaleString()+'원'}</div>
               <button class="btn-delete" onclick="removeItem(${index})">&times;</button>
+              <div style="width:100%;">${stockAlert}</div>
             </div>
           `;
       });
       
+      if(needsUpdate) {
+         localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      }
+      
       listEl.innerHTML = html;
       
       // Update Summary
-      const shipping = totalPrice >= 50000 ? 0 : 3000;
+      const shipping = (totalPrice >= 50000 || totalPrice === 0) ? 0 : 3000;
       document.getElementById('sum-price').innerText = totalPrice.toLocaleString() + '원';
       document.getElementById('shipping-cost').innerText = shipping.toLocaleString() + '원';
       document.getElementById('total-price').innerText = (totalPrice + shipping).toLocaleString() + '원';
@@ -104,10 +147,21 @@
   function changeQty(index, delta) {
       let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
       if(cart[index]) {
-          cart[index].qty += delta;
-          if(cart[index].qty < 1) cart[index].qty = 1;
+          const item = cart[index];
+          const dbItem = productStockInfo[item.id];
+          const stock = dbItem ? dbItem.stock : 999;
+          
+          let newVal = item.qty + delta;
+          if(newVal < 1) newVal = 1;
+          
+          if(newVal > stock) {
+              alert('재고가 부족합니다. (최대 '+stock+'개)');
+              newVal = stock;
+          }
+          
+          cart[index].qty = newVal;
           localStorage.setItem(CART_KEY, JSON.stringify(cart));
-          loadCart();
+          renderCartHtml(cart, productStockInfo);
       }
   }
   
@@ -116,7 +170,7 @@
       let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
       cart.splice(index, 1);
       localStorage.setItem(CART_KEY, JSON.stringify(cart));
-      loadCart();
+      loadCart(); // Reload to re-check
   }
   
   function clearCart() {
@@ -126,8 +180,6 @@
   }
   
   function processOrder() {
-      // Check login via PHP session check is tricky in purely JS func without ajax?
-      // Actually we'll let order.php handle the login check logic.
       location.href = '/dokju/order.php';
   }
 

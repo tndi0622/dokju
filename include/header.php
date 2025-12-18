@@ -147,7 +147,13 @@ include_once __DIR__ . '/db_connect.php';
                 <span style="color:#888; margin-right:15px; font-weight:500;">${user}님</span>
                 <a href="/dokju/mypage.php" style="text-decoration:none; color:#2b2b2b; margin-right:10px;">MY PAGE${badge}</a>
                 
-                <a href="javascript:void(0)" onclick="logoutHeader();" style="text-decoration:none; color:#aaa; font-size:12px; margin-right:20px;">LOGOUT</a>
+                <a href="javascript:void(0)" onclick="logoutHeader();" title="로그아웃" style="text-decoration:none; color:#888; margin-right:20px; display:flex; align-items:center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </a>
                 <span style="border-left:1px solid #ddd; height:12px; display:inline-block; vertical-align:middle; margin-right:20px;"></span>
                 <a href="/dokju/cart.php" style="text-decoration:none; color:#fff; background:#2b2b2b; padding:6px 14px; border-radius:2px; font-size:13px;">CART</a>
               `;

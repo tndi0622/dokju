@@ -48,6 +48,11 @@ foreach($items as $item) {
         $item['image']
     );
     $stmt_item->execute();
+    
+    // 3. Decrease Stock
+    $update_stock = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+    $update_stock->bind_param("ii", $item['qty'], $pid);
+    $update_stock->execute();
 }
 
 echo json_encode(['success'=>true]);

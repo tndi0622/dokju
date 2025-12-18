@@ -46,6 +46,20 @@ include './include/header.php';
             $related_items[] = $row;
         }
     }
+    
+    // Check if restock notification is already applied
+    $is_restock_applied = false;
+    if(isset($_SESSION['userid'])) {
+        $check_table = $conn->query("SHOW TABLES LIKE 'restock_notifications'");
+        if($check_table && $check_table->num_rows > 0) {
+           $chk_stmt = $conn->prepare("SELECT count(*) as cnt FROM restock_notifications WHERE product_id = ? AND userid = ?");
+           $chk_stmt->bind_param("is", $id, $_SESSION['userid']);
+           $chk_stmt->execute();
+           if($chk_stmt->get_result()->fetch_assoc()['cnt'] > 0) {
+               $is_restock_applied = true;
+           }
+        }
+    }
   ?>
 
   <!-- Breadcrumb -->
@@ -94,8 +108,23 @@ include './include/header.php';
 
       <!-- Actions -->
       <div class="pd-actions">
-        <button class="btn-cart" onclick="addToCart()">장바구니</button>
-        <button class="btn-buy" onclick="buyNow()">구매하기</button>
+        <?php if(isset($item['stock']) && $item['stock'] <= 0): ?>
+            <div style="grid-column: 1 / -1; display:flex; flex-direction:column; gap:10px; width:100%;">
+                <button disabled style="width:100%; padding:15px; background:#f5f5f5; color:#999; border:1px solid #ddd; font-weight:600; cursor:not-allowed;">품절된 상품입니다</button>
+                <?php if($is_restock_applied): ?>
+                    <button onclick="requestRestock(<?php echo $item['id']; ?>, 'cancel')" style="width:100%; padding:15px; background:#fff; border:1px solid #e74c3c; color:#e74c3c; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        🔕 재입고 알림 취소
+                    </button>
+                <?php else: ?>
+                    <button onclick="requestRestock(<?php echo $item['id']; ?>, 'apply')" style="width:100%; padding:15px; background:#fff; border:1px solid #2b2b2b; color:#2b2b2b; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        🔔 재입고 알림 신청
+                    </button>
+                <?php endif; ?>
+            </div>
+        <?php else: ?>
+            <button class="btn-cart" onclick="addToCart()">장바구니</button>
+            <button class="btn-buy" onclick="buyNow()">구매하기</button>
+        <?php endif; ?>
       </div>
     </div>
   </div>
@@ -141,11 +170,17 @@ include './include/header.php';
   <?php endif; ?>
 
   <script>
+    const MAX_STOCK = <?php echo isset($item['stock']) ? $item['stock'] : 999; ?>;
+
     function updateQty(change) {
        var input = document.getElementById('qty');
        var val = parseInt(input.value);
        val += change;
        if(val < 1) val = 1;
+       if(val > MAX_STOCK) {
+           alert('남은 재고가 부족합니다. (최대 '+MAX_STOCK+'개)');
+           val = MAX_STOCK;
+       }
        input.value = val;
     }
     
@@ -182,6 +217,39 @@ include './include/header.php';
             addToCart();
             location.href = '/dokju/cart.php';
         }
+    }
+
+
+    function requestRestock(pid, mode) {
+        mode = mode || 'apply';
+        const msg = (mode === 'cancel') ? '알림 신청을 취소하시겠습니까?' : '재입고 시 알림을 받으시겠습니까?';
+        
+        if(!confirm(msg)) return;
+        
+        const formData = new FormData();
+        formData.append('product_id', pid);
+        formData.append('mode', mode);
+        
+        fetch('/dokju/ajax_restock.php', { method: 'POST', body: formData })
+        .then(res => res.text())
+        .then(res => {
+            const r = res.trim();
+            if(r === 'success') {
+                alert('알림이 신청되었습니다.');
+                location.reload();
+            } else if(r === 'cancelled') {
+                alert('알림 신청이 취소되었습니다.');
+                location.reload();
+            } else if(r === 'duplicate') {
+                alert('이미 신청하셨습니다.');
+                location.reload();
+            } else if(r === 'login_required') { 
+                alert('로그인이 필요합니다.'); 
+                location.href='/dokju/login.php'; 
+            } else {
+                alert('오류가 발생했습니다.');
+            }
+        });
     }
   </script>
 

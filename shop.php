@@ -110,6 +110,9 @@ include './include/header.php';
              $wished_class = ($item['is_wished'] > 0) ? 'active' : '';
         ?>
         <div class="product-card" onclick="location.href='/dokju/product_view.php?id=<?php echo $item['id']; ?>'">
+          <?php if(isset($item['stock']) && $item['stock'] <= 0): ?>
+              <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); color:#333; display:flex; justify-content:center; align-items:center; font-size:18px; font-weight:700; z-index:5; border-radius:12px;">SOLD OUT</div>
+          <?php endif; ?>
           <?php if($badge): ?><span class="badge <?php echo strtolower($badge); ?>"><?php echo $badge; ?></span><?php endif; ?>
           
           <button class="wishlist-btn <?php echo $wished_class; ?>" aria-label="찜하기" onclick="toggleWish(<?php echo $item['id']; ?>, event)">♥</button>

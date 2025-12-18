@@ -1,0 +1,278 @@
+/* Product View Container */
+.view-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px;
+}
+
+/* Breadcrumb / Top Nav inside */
+.view-nav {
+    margin-bottom: 40px;
+    font-size: 14px;
+    color: #888;
+}
+
+.view-nav a {
+    text-decoration: none;
+    color: #888;
+    transition: color 0.2s;
+}
+
+.view-nav a:hover {
+    color: #2b2b2b;
+}
+
+/* Main Content: Flex Layout */
+.product-detail {
+    display: flex;
+    gap: 60px;
+    align-items: flex-start;
+    margin-bottom: 100px;
+    /* Space before details */
+}
+
+/* Left: Image */
+.pd-image {
+    flex: 1;
+    background-color: #f4f0e6;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 4/5;
+}
+
+.pd-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 40px;
+}
+
+/* Right: Info */
+.pd-info {
+    flex: 1;
+    padding-top: 10px;
+}
+
+/* Brand & Title */
+.pd-brand {
+    font-size: 16px;
+    color: #999;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.pd-title {
+    font-size: 32px;
+    color: #2b2b2b;
+    margin-bottom: 24px;
+    line-height: 1.3;
+}
+
+/* Price */
+.pd-price {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2b2b2b;
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+/* Specs Table */
+.pd-specs {
+    margin-bottom: 30px;
+}
+
+.spec-row {
+    display: flex;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.spec-label {
+    width: 100px;
+    color: #888;
+}
+
+.spec-val {
+    color: #2b2b2b;
+    font-weight: 500;
+}
+
+/* Quantity Selector */
+.pd-qty {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 30px;
+    border: 1px solid #ddd;
+    width: fit-content;
+}
+
+.qty-btn {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #555;
+    transition: background 0.2s;
+}
+
+.qty-btn:hover {
+    background: #f5f5f5;
+}
+
+.qty-input {
+    width: 50px;
+    height: 40px;
+    border: none;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2b2b2b;
+    outline: none;
+}
+
+/* Chrome/Safari number arrows removal */
+.qty-input::-webkit-inner-spin-button,
+.qty-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Actions */
+.pd-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.btn-buy {
+    flex: 2;
+    background: #2b2b2b;
+    color: #fff;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 18px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-buy:hover {
+    background: #4a3b32;
+}
+
+.btn-cart {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #ccc;
+    color: #2b2b2b;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-cart:hover {
+    border-color: #2b2b2b;
+    background: #fdfdfd;
+}
+
+/* Detailed Description Section */
+.detail-section {
+    margin-bottom: 100px;
+}
+
+.detail-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2b2b2b;
+    margin-bottom: 30px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #2b2b2b;
+}
+
+.detail-content {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #2b2b2b;
+    min-height: 200px;
+    background: #f4f0e6;
+    padding: 40px;
+    border-radius: 4px;
+}
+
+/* Related Products */
+.related-section {
+    margin-bottom: 80px;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+/* Re-use simplified product card styles? 
+   We should probably import 'shop.css' or define basic card styles here if meant to be standalone.
+   For now, we can reuse classes if 'shop.css' is linked?
+   Wait, shop.css styles .product-card. 
+   We will link shop.css in the PHP file.
+*/
+
+@media (max-width: 900px) {
+    .product-detail {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .related-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Mobile Actions fix */
+    .pd-actions {
+        display: flex;
+        flex-direction: row;
+        gap: 8px;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .btn-buy,
+    .btn-cart {
+        padding: 0;
+        height: 52px;
+        font-size: 15px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        white-space: nowrap;
+        border-radius: 4px;
+    }
+
+    .btn-cart {
+        flex: 1;
+        font-size: 14px;
+    }
+
+    .btn-buy {
+        flex: 2;
+        font-weight: 700;
+    }
+}
+
+@media (max-width: 480px) {
+    .related-grid {
+        grid-template-columns: 1fr;
+    }
+}

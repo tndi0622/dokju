@@ -1,0 +1,206 @@
+/* Member Container (Login, Join, MyPage) */
+.member-container {
+    max-width: 500px;
+    margin: 100px auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.member-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #2b2b2b;
+}
+
+/* Forms */
+.member-form {
+    text-align: left;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    border-radius: 4px;
+    outline: none;
+    transition: border 0.3s;
+}
+
+.input-field:focus {
+    border-color: #2b2b2b;
+}
+
+.btn-submit {
+    width: 100%;
+    background: #2b2b2b;
+    color: #fff;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s;
+}
+
+.btn-submit:hover {
+    background: #4a3b32;
+}
+
+/* Links */
+.member-links {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #888;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.member-links a {
+    color: #555;
+    text-decoration: none;
+}
+
+.member-links a:hover {
+    text-decoration: underline;
+}
+
+/* My Page Specific */
+.mypage-container {
+    max-width: 1000px;
+    margin: 80px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+}
+
+.mypage-nav {
+    flex: 1;
+    border-right: 1px solid #eee;
+    padding-right: 20px;
+}
+
+.mypage-nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mypage-nav li {
+    margin-bottom: 16px;
+}
+
+.mypage-nav a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #555;
+    display: block;
+    padding: 8px 0;
+    border-bottom: 1px solid transparent;
+}
+
+.mypage-nav a.active {
+    color: #2b2b2b;
+    font-weight: 700;
+    border-bottom: 2px solid #2b2b2b;
+}
+
+.mypage-content {
+    flex: 3;
+}
+
+.my-section {
+    margin-bottom: 60px;
+}
+
+.my-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #2b2b2b;
+}
+
+.order-list .order-item {
+    border: 1px solid #eee;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-info span {
+    display: block;
+    font-size: 14px;
+    color: #888;
+}
+
+.order-info strong {
+    font-size: 16px;
+    color: #2b2b2b;
+}
+
+@media(max-width: 768px) {
+    .mypage-container {
+        flex-direction: column;
+    }
+
+    .mypage-nav {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 30px;
+    }
+}
+
+/* Social Login */
+.social-login {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-social {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s;
+}
+
+.btn-social:hover {
+    opacity: 0.9;
+}
+
+.btn-kakao {
+    background-color: #FEE500;
+    color: #000;
+}
+
+.btn-naver {
+    background-color: #03C75A;
+    color: #fff;
+}

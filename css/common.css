@@ -1,0 +1,818 @@
+/* Pretendard Font */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
+@font-face {
+  font-family: "Shilla";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/Shilla_CultureM-Medium.woff2") format("woff2");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Shilla";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/Shilla_CultureB-Bold.woff2") format("woff2");
+  font-weight: 700;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Shilla", serif;
+  background: #efe8db;
+  color: #2b2b2b;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Community Specific Readability Font */
+.community-container,
+.write-container,
+.view-content,
+.comment-section,
+.modal-content {
+  font-family: "Pretendard", "Malgun Gothic", sans-serif;
+  font-weight: 400;
+}
+
+/* Apply Shilla Font to Titles & Branding */
+h1,
+h2,
+h3,
+.section-title,
+.slide-text h2,
+.slide-text p,
+.footer-info strong,
+.logo,
+.product-info .name,
+/* Shop Product Name */
+.shop-header h2,
+.community-title,
+.write-title,
+.view-title {
+  font-family: "Shilla", serif;
+}
+
+header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: #efe8db;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0;
+}
+
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  width: 140px;
+  display: block;
+}
+
+nav {
+  display: flex;
+  gap: 10px;
+}
+
+nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: #2b2b2b;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  font-size: 16px;
+  padding: 8px 0;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background-color: #4a3b32;
+  transition: width 0.3s ease;
+}
+
+nav a:hover,
+nav a.active {
+  color: #4a3b32;
+}
+
+nav a:hover::after,
+nav a.active::after {
+  width: 100%;
+}
+
+.user-menu a {
+  transition: color 0.3s;
+}
+
+.user-menu a:hover {
+  color: #4a3b32 !important;
+  text-decoration: underline !important;
+}
+
+@media (max-width: 900px) {
+  .header-inner {
+    flex-direction: column;
+    height: auto;
+    padding: 15px 10px;
+    gap: 10px;
+  }
+
+  .logo img {
+    width: 110px;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  nav a {
+    margin: 5px 8px;
+    font-size: 14px;
+  }
+
+  .user-menu {
+    display: flex !important;
+    width: 100%;
+    justify-content: center;
+    margin-top: 5px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    flex-wrap: wrap;
+  }
+
+  /* Slide Mobile */
+  .hero {
+    padding: 0;
+    margin-bottom: 40px;
+  }
+
+  .hero-inner {
+    padding: 0;
+    width: 100%;
+  }
+
+  .slides {
+    height: 360px;
+  }
+
+  /* Image goes background-like on mobile */
+  .slide img {
+    width: 100%;
+    height: 100%;
+    opacity: 0.3;
+    object-fit: cover;
+  }
+
+  .slide-text {
+    width: 100%;
+    background: none;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    justify-content: center;
+  }
+
+  .slide-text h2 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  }
+
+  .slide-text p {
+    font-size: 15px;
+  }
+
+  .slider-btn.prev {
+    left: 5px;
+    font-size: 40px;
+  }
+
+  .slider-btn.next {
+    right: 5px;
+    font-size: 40px;
+  }
+
+  /* Footer Mobile */
+  .footer-inner {
+    padding: 50px 20px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+    align-items: center;
+  }
+
+  .footer-info {
+    width: 100%;
+    padding: 25px;
+  }
+
+  .footer-sns {
+    margin-bottom: 20px;
+  }
+}
+
+.hero {
+  position: relative;
+  padding: 60px 0 80px;
+}
+
+.hero-inner {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+.slides {
+  position: relative;
+  height: 520px;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.slide img {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 648px;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.slide:nth-child(2) img {
+  object-position: 80% center;
+}
+
+.slide-text {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: calc(100% - 648px);
+  background: #fdfbf7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 40px;
+  color: #2b2b2b;
+  z-index: 2;
+  transform: none;
+}
+
+.slide-text h2 {
+  font-size: 36px;
+  letter-spacing: 6px;
+  margin-bottom: 16px;
+}
+
+.slide-text p {
+  font-size: 18px;
+  line-height: 1.8;
+}
+
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #2b2b2b;
+  font-size: 56px;
+  font-family: "Shilla", serif;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* 좌우 위치를 텍스트 바깥으로 */
+.slider-btn.prev {
+  left: -48px;
+}
+
+.slider-btn.next {
+  right: -48px;
+}
+
+.slider-btn:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 36px;
+  padding: 14px 40px;
+  border: 1px solid #2b2b2b;
+  text-decoration: none;
+  color: #2b2b2b;
+  letter-spacing: 2px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background: #4a3b32;
+  color: #efe8db;
+  border-color: #4a3b32;
+}
+
+/* DARK SECTION */
+.dark {
+  background: #2f2c29;
+  color: #f5f5f0;
+  /* 연한 아이보리 */
+  padding: 100px 60px;
+}
+
+/* FLEX LAYOUT */
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 80px;
+}
+
+/* Layout Ratios */
+.flex .text-wrap {
+  flex: 4;
+  min-width: 300px;
+  /* 최소 너비 확보 */
+}
+
+.flex .img-wrap {
+  flex: 6;
+  min-width: 300px;
+}
+
+/* Reverse layout helper */
+.flex.reverse .text-wrap {
+  order: 2;
+}
+
+.flex.reverse .img-wrap {
+  order: 1;
+}
+
+@media (max-width: 900px) {
+
+  .flex,
+  .flex.reverse {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .flex.reverse .text-wrap,
+  .flex.reverse .img-wrap {
+    order: unset;
+  }
+
+  .section-content ul {
+    text-align: left;
+    display: inline-block;
+  }
+}
+
+
+.section-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  margin-bottom: 32px;
+}
+
+.section-content {
+  font-size: 18px;
+  line-height: 1.9;
+  /* 가독성 증가 */
+  color: #f0ebe2;
+}
+
+.ink {
+  width: 100%;
+  max-width: 100%;
+  opacity: 0.9;
+  display: block;
+}
+
+/* footer */
+footer {
+  margin-top: 80px;
+  background: #efe8db;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 80px 60px;
+  background: url("/dokju/images/fuji.jpg") center/cover no-repeat;
+  position: relative;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.footer-info {
+  background: rgba(253, 251, 247, 0.9);
+  padding: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  max-width: 480px;
+  backdrop-filter: blur(5px);
+}
+
+.footer-info strong {
+  font-size: 28px;
+  letter-spacing: 6px;
+  display: block;
+  margin-bottom: 24px;
+  color: #2b2b2b;
+}
+
+.sns-btn {
+  display: inline-block;
+  padding: 10px 24px;
+  background: rgba(43, 43, 43, 0.8);
+  color: #efe8db;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.sns-btn:hover {
+  background: #4a3b32;
+  color: #fff;
+}
+
+/* Scroll Animation */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  will-change: opacity, visibility;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- Hamburger & Mobile Menu Styles --- */
+.mobile-header-items {
+  display: none;
+  align-items: center;
+  gap: 20px;
+}
+
+.mobile-icon {
+  font-size: 24px;
+  text-decoration: none;
+  color: #2b2b2b;
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 25px;
+  height: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #2b2b2b;
+  border-radius: 2px;
+}
+
+/* Mobile Overlay */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.mobile-menu-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80%;
+  max-width: 320px;
+  height: 100%;
+  background: #fff;
+  padding: 30px;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mobile-menu-overlay.active .mobile-menu-content {
+  transform: translateX(0);
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.mobile-title {
+  font-family: "Shilla", serif;
+  font-size: 24px;
+  font-weight: bold;
+  color: #2b2b2b;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  color: #555;
+  padding: 0;
+  line-height: 1;
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.mobile-nav-links a {
+  font-size: 18px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
+  transition: color 0.2s;
+}
+
+.mobile-nav-links a.active,
+.mobile-nav-links a:hover {
+  color: #4a3b32;
+  font-family: "Shilla", serif;
+  font-weight: bold;
+  border-bottom-color: #4a3b32;
+}
+
+.mobile-user-area {
+  margin-top: 20px;
+  background: #fdfbf7;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.mobile-welcome {
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #2b2b2b;
+}
+
+.mobile-user-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.mobile-user-link {
+  display: block;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-decoration: none;
+  color: #555;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.mobile-login-btn,
+.mobile-logout-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: #2b2b2b;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Helper Classes */
+.mobile-only {
+  display: none !important;
+}
+
+.mobile-cart-btn {
+  font-size: 24px;
+  text-decoration: none;
+  color: #2b2b2b;
+  line-height: 1;
+}
+
+/* Hide PC Nav on Mobile */
+@media (max-width: 900px) {
+  .mobile-only {
+    display: block !important;
+  }
+
+  .pc-nav,
+  .pc-user-menu {
+    display: none !important;
+  }
+
+  .header-inner {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    height: 60px;
+    gap: 0;
+  }
+
+  .logo img {
+    width: 100px !important;
+    margin: 0;
+  }
+
+  .mobile-cart-btn {
+    width: 40px;
+    display: flex;
+    justify-content: flex-end;
+    /* Right align */
+    align-items: center;
+  }
+
+  .hamburger-btn {
+    width: 24px;
+    height: 18px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: stretch;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    box-sizing: content-box;
+  }
+
+  /* Ensure spans are visible blocks */
+  .hamburger-btn span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #2b2b2b;
+    border-radius: 2px;
+  }
+
+
+}
+
+/* Slider Dots Style */
+.slider-dots {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 20;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dot.active {
+  background: #fff;
+  transform: scale(1.2);
+}
+
+/* Mobile Slide Fixes */
+@media (max-width: 900px) {
+  .slides {
+    height: 520px;
+  }
+
+  .slide img {
+    height: 60%;
+    object-fit: cover;
+    top: 0;
+  }
+
+  .slide-text {
+    width: 85%;
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    bottom: 40px;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    text-align: center;
+    height: auto;
+  }
+
+  .slide-text h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-shadow: none;
+    color: #2b2b2b;
+  }
+
+  .slide-text p {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .slide .btn {
+    margin-top: 0;
+    padding: 10px 30px;
+    font-size: 14px;
+  }
+}

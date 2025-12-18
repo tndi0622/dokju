@@ -13,7 +13,7 @@
             <div class="slide-text">
               <h2>BEST SELLER</h2>
               <p>지금 바로 직접 확인하세요<br>가장 사랑받는 프리미엄 사케</p>
-              <a href="/dokju/shop.php" class="btn">자세히 보기</a>
+              <a href="/dokju/shop.php?sort=popular" class="btn">자세히 보기</a>
             </div>
           </div>
       
@@ -140,12 +140,16 @@ function prevSlide() {
   showSlide((current - 1 + slides.length) % slides.length);
 }
 
-// Swipe Support
+// Swipe & Mouse Drag Support
 let touchStartX = 0;
 let touchEndX = 0;
+let isDragging = false;
+let startMouseX = 0;
+
 const sliderContainer = document.querySelector('.hero'); 
 
 if(sliderContainer) {
+    // Touch Events
     sliderContainer.addEventListener('touchstart', e => {
         touchStartX = e.changedTouches[0].screenX;
     }, {passive: true});
@@ -154,6 +158,37 @@ if(sliderContainer) {
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
     }, {passive: true});
+    
+    // Mouse Events for PC
+    sliderContainer.style.cursor = 'grab'; // Default cursor
+    
+    sliderContainer.addEventListener('mousedown', e => {
+        isDragging = true;
+        startMouseX = e.clientX;
+        sliderContainer.style.cursor = 'grabbing';
+        e.preventDefault(); // Prevent text selection
+    });
+    
+    sliderContainer.addEventListener('mouseup', e => {
+        if(!isDragging) return;
+        isDragging = false;
+        sliderContainer.style.cursor = 'grab';
+        
+        const endMouseX = e.clientX;
+        // Logic same as handleSwipe
+        if (endMouseX < startMouseX - 50) {
+            nextSlide();
+            resetTimer();
+        } else if (endMouseX > startMouseX + 50) {
+            prevSlide();
+            resetTimer();
+        }
+    });
+    
+    sliderContainer.addEventListener('mouseleave', () => {
+        isDragging = false;
+        sliderContainer.style.cursor = 'grab';
+    });
 }
 
 function handleSwipe() {

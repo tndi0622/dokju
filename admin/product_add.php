@@ -13,7 +13,7 @@ if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>상품 추가 - 獨酒 Admin</title>
+    <title>상품 추가</title>
     <link rel="stylesheet" href="/dokju/css/admin.css?v=<?php echo time(); ?>">
 </head>
 <body>
@@ -21,7 +21,7 @@ if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
         <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="admin-logo">
-                <h1>獨酒 Admin</h1>
+                <h1>Admin</h1>
                 <p>관리자 패널</p>
             </div>
             <nav class="admin-nav">

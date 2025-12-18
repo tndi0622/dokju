@@ -162,8 +162,9 @@ if(isset($_GET['id'])) {
         
         <div class="form-group">
             <label class="form-label">카테고리</label>
-            <select name="category" class="form-select" required>
+            <select name="category" class="form-select" id="category-select" required>
                 <option value="">카테고리를 선택하세요</option>
+                <option value="free" <?php echo (isset($post_data['category']) && $post_data['category']=='free')?'selected':''; ?>>자유</option>
                 <option value="review" <?php echo (isset($post_data['category']) && $post_data['category']=='review')?'selected':''; ?>>리뷰</option>
                 <option value="recommend" <?php echo (isset($post_data['category']) && $post_data['category']=='recommend')?'selected':''; ?>>추천</option>
                 <option value="question" <?php echo (isset($post_data['category']) && $post_data['category']=='question')?'selected':''; ?>>질문</option>
@@ -289,6 +290,14 @@ function submitPost() {
     
     // Copy HTML from editor to textarea
     content.value = editor.innerHTML;
+    
+    // Validation
+    const category = document.querySelector('select[name="category"]');
+    if(!category.value) {
+        alert('카테고리를 선택해주세요.');
+        category.focus();
+        return;
+    }
     
     if(editor.innerText.trim() === '' && !editor.innerHTML.includes('<img')) {
         alert('내용을 입력하세요.');

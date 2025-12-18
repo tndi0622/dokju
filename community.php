@@ -5,9 +5,9 @@ include './include/db_connect.php';
 // Get filters
 $category = $_GET['category'] ?? 'all';
 $sort = $_GET['sort'] ?? 'latest';
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$per_page = 10;
-$offset = ($page - 1) * $per_page;
+$page_no = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$per_page = 5;
+$offset = ($page_no - 1) * $per_page;
 
 // Build query
 $where = ($category !== 'all') ? "WHERE category = '$category'" : "";
@@ -24,7 +24,7 @@ $order = $order_map[$sort] ?? 'created_at DESC';
 $count_sql = "SELECT COUNT(*) as total FROM community_posts $where";
 $total_result = $conn->query($count_sql);
 $total_posts = $total_result->fetch_assoc()['total'];
-$total_pages = ceil($total_posts / $per_page);
+$total_pages = (int)ceil($total_posts / $per_page);
 
 // Get posts
 $sql = "SELECT p.*, u.name, u.nickname 
@@ -51,6 +51,7 @@ include './include/header.php';
     <!-- Left: Tabs -->
     <div class="nav-tabs">
       <a href="?category=all&sort=<?php echo $sort; ?>" class="<?php echo ($category === 'all') ? 'active' : ''; ?>">전체</a>
+      <a href="?category=free&sort=<?php echo $sort; ?>" class="<?php echo ($category === 'free') ? 'active' : ''; ?>">자유</a>
       <a href="?category=review&sort=<?php echo $sort; ?>" class="<?php echo ($category === 'review') ? 'active' : ''; ?>">리뷰</a>
       <a href="?category=recommend&sort=<?php echo $sort; ?>" class="<?php echo ($category === 'recommend') ? 'active' : ''; ?>">추천</a>
       <a href="?category=question&sort=<?php echo $sort; ?>" class="<?php echo ($category === 'question') ? 'active' : ''; ?>">질문</a>
@@ -78,6 +79,7 @@ include './include/header.php';
         <?php 
           $display_name = !empty($row['nickname']) ? $row['nickname'] : $row['name'];
           $cat_text = [
+            'free' => '자유',
             'review' => '리뷰',
             'recommend' => '추천',
             'question' => '질문'
@@ -135,25 +137,33 @@ include './include/header.php';
 
   <!-- Pagination -->
   <?php if ($total_pages > 1): ?>
-  <div class="pagination">
-    <?php if ($page > 1): ?>
-      <a href="?category=<?php echo $category; ?>&sort=<?php echo $sort; ?>&page=<?php echo $page-1; ?>" class="page-link">이전</a>
-    <?php else: ?>
-      <span class="page-link disabled">이전</span>
-    <?php endif; ?>
-    
-    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-      <a href="?category=<?php echo $category; ?>&sort=<?php echo $sort; ?>&page=<?php echo $i; ?>" 
-         class="page-link <?php echo ($i === $page) ? 'active' : ''; ?>">
-        <?php echo $i; ?>
-      </a>
-    <?php endfor; ?>
-    
-    <?php if ($page < $total_pages): ?>
-      <a href="?category=<?php echo $category; ?>&sort=<?php echo $sort; ?>&page=<?php echo $page+1; ?>" class="page-link">다음</a>
-    <?php else: ?>
-      <span class="page-link disabled">다음</span>
-    <?php endif; ?>
+  <div class="pagination" style="display:flex !important; justify-content: center; gap: 10px; margin-top: 40px;">
+    <?php 
+      $cat_safe = htmlspecialchars($category);
+      $sort_safe = htmlspecialchars($sort);
+      
+      // Prev
+      if ($page_no > 1) {
+          $prev = $page_no - 1;
+          echo '<a href="?category='.$cat_safe.'&sort='.$sort_safe.'&page='.$prev.'" class="page-link">이전</a>';
+      } else {
+          echo '<span class="page-link disabled">이전</span>';
+      }
+      
+      // Pages
+      for ($i = 1; $i <= $total_pages; $i++) {
+          $active = ($i == $page_no) ? 'active' : '';
+          echo '<a href="?category='.$cat_safe.'&sort='.$sort_safe.'&page='.$i.'" class="page-link '.$active.'">'.$i.'</a>';
+      }
+      
+      // Next
+      if ($page_no < $total_pages) {
+          $next = $page_no + 1;
+          echo '<a href="?category='.$cat_safe.'&sort='.$sort_safe.'&page='.$next.'" class="page-link">다음</a>';
+      } else {
+          echo '<span class="page-link disabled">다음</span>';
+      }
+    ?>
   </div>
   <?php endif; ?>
 </main>

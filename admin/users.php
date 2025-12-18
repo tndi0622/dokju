@@ -16,7 +16,7 @@ $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY crea
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원 관리 - 獨酒 Admin</title>
+    <title>회원 관리</title>
     <link rel="stylesheet" href="/dokju/css/admin.css?v=<?php echo time(); ?>">
 </head>
 <body>
@@ -24,7 +24,7 @@ $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY crea
         <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="admin-logo">
-                <h1>獨酒 Admin</h1>
+                <h1>Admin</h1>
                 <p>관리자 패널</p>
             </div>
             <nav class="admin-nav">

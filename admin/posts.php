@@ -20,7 +20,7 @@ $posts = $conn->query("SELECT p.*, u.name, u.nickname,
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>커뮤니티 관리 - 獨酒 Admin</title>
+    <title>커뮤니티 관리</title>
     <link rel="stylesheet" href="/dokju/css/admin.css?v=<?php echo time(); ?>">
 </head>
 <body>
@@ -28,7 +28,7 @@ $posts = $conn->query("SELECT p.*, u.name, u.nickname,
         <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="admin-logo">
-                <h1>獨酒 Admin</h1>
+                <h1>Admin</h1>
                 <p>관리자 패널</p>
             </div>
             <nav class="admin-nav">
@@ -78,11 +78,13 @@ $posts = $conn->query("SELECT p.*, u.name, u.nickname,
                             <td><?php echo $post['id']; ?></td>
                             <td><span class="badge badge-warning"><?php echo $cat_text; ?></span></td>
                             <td>
-                                <a href="/dokju/community_view.php?id=<?php echo $post['id']; ?>" 
-                                   target="_blank" 
-                                   style="color:#333; text-decoration:none;">
-                                    <?php echo htmlspecialchars($post['title']); ?>
-                                </a>
+                                <div style="max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <a href="/dokju/community_view.php?id=<?php echo $post['id']; ?>" 
+                                       target="_blank" 
+                                       style="color:#333; text-decoration:none;" title="<?php echo htmlspecialchars($post['title']); ?>">
+                                        <?php echo htmlspecialchars($post['title']); ?>
+                                    </a>
+                                </div>
                             </td>
                             <td><?php echo htmlspecialchars($display_name); ?></td>
                             <td><?php echo $post['views']; ?></td>

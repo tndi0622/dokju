@@ -82,12 +82,36 @@
   }
 
   (function(){
-      const user = localStorage.getItem('dokju_current_user');
       const pcMenu = document.getElementById('user-auth-menu');
       const mobileMenu = document.getElementById('mobile-auth-menu');
       
-      // Admin check
-      <?php $isAdmin = (isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin'); ?>
+      // Auth Check & Nickname Fetch
+      <?php 
+        $current_user_name = '';
+        $isAdmin = false;
+        
+        if(isset($_SESSION['userid'])) {
+             if($_SESSION['userid'] === 'admin') {
+                 $isAdmin = true;
+                 $current_user_name = '관리자';
+             } elseif(isset($conn)) {
+                 $stmt = $conn->prepare("SELECT nickname, name FROM users WHERE userid = ?");
+                 $stmt->bind_param("s", $_SESSION['userid']);
+                 $stmt->execute();
+                 $res = $stmt->get_result();
+                 if($row = $res->fetch_assoc()) {
+                     $current_user_name = !empty($row['nickname']) ? $row['nickname'] : $row['name'];
+                 }
+             }
+        }
+      ?>
+      
+      const dbUser = "<?php echo htmlspecialchars($current_user_name); ?>";
+      if(dbUser) {
+          localStorage.setItem('dokju_current_user', dbUser);
+      }
+      
+      const user = dbUser || localStorage.getItem('dokju_current_user');
       const isAdmin = <?php echo $isAdmin ? 'true' : 'false'; ?>;
       let adminLink = isAdmin ? `<a href="/dokju/admin/dashboard.php" style="text-decoration:none; color:#ef6c00; margin-right:10px; font-weight:600;">⚙️ ADMIN</a>` : '';
 

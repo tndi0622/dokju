@@ -28,7 +28,7 @@ $recent_posts = $conn->query("SELECT p.id, p.title, p.category, p.created_at, u.
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 대시보드 - 獨酒</title>
+    <title>관리자 대시보드</title>
     <link rel="stylesheet" href="/dokju/css/admin.css?v=<?php echo time(); ?>">
 </head>
 <body>
@@ -36,7 +36,7 @@ $recent_posts = $conn->query("SELECT p.id, p.title, p.category, p.created_at, u.
         <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="admin-logo">
-                <h1>獨酒 Admin</h1>
+                <h1>Admin</h1>
                 <p>관리자 패널</p>
             </div>
             <nav class="admin-nav">
@@ -121,7 +121,11 @@ $recent_posts = $conn->query("SELECT p.id, p.title, p.category, p.created_at, u.
                         ?>
                         <tr>
                             <td><span class="badge badge-warning"><?php echo $cat_text; ?></span></td>
-                            <td><?php echo htmlspecialchars($post['title']); ?></td>
+                            <td>
+                                <div style="max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo htmlspecialchars($post['title']); ?>">
+                                    <?php echo htmlspecialchars($post['title']); ?>
+                                </div>
+                            </td>
                             <td><?php echo htmlspecialchars($post['name']); ?></td>
                             <td><?php echo date('Y-m-d H:i', strtotime($post['created_at'])); ?></td>
                         </tr>

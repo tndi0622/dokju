@@ -6,15 +6,15 @@
 
   <div id="cart-content-wrapper" class="cart-content">
     <!-- Left Section -->
-    <div class="cart-left-section" style="flex:1;">
+    <div class="cart-left-section">
         <!-- Cart Items -->
         <div class="cart-list" id="cart-list">
           <!-- JS Render -->
         </div>
         
-        <!-- Actions (Moved to Bottom Right) -->
-        <div style="text-align:right; margin-top:15px;">
-            <button onclick="clearCart()" style="padding:8px 14px; background:#fff; border:1px solid #ccc; color:#555; cursor:pointer; font-size:13px; border-radius:4px;">장바구니 비우기</button>
+        <!-- Actions -->
+        <div class="cart-actions-row">
+            <button onclick="clearCart()" class="btn-clear-cart">장바구니 비우기</button>
         </div>
     </div>
 
@@ -101,23 +101,23 @@
           if(!isSoldOut && item.qty > stock) {
               item.qty = stock;
               needsUpdate = true;
-              stockAlert = `<div style="color:red; font-size:12px; margin-top:5px;">재고 부족으로 ${stock}개로 조정되었습니다.</div>`;
+              stockAlert = `재고 부족으로 ${stock}개로 조정되었습니다.`;
           }
           
           let itemTotal = item.price * item.qty;
           if(!isSoldOut) totalPrice += itemTotal;
           
           html += `
-            <div class="cart-item" style="${isSoldOut ? 'opacity:0.5; background:#f9f9f9;' : ''}">
+            <div class="cart-item ${isSoldOut ? 'sold-out' : ''}">
               <div class="cart-img">
-                <a href="/dokju/product_view.php?id=${item.id}" style="display:block; height:100%;">
+                <a href="/dokju/product_view.php?id=${item.id}">
                     <img src="${dbItem.image}" alt="${dbItem.product_name}">
                 </a>
               </div>
               <div class="cart-info">
                 <a href="/dokju/product_view.php?id=${item.id}" class="cart-name">${dbItem.product_name}</a>
                 <span class="cart-price">${item.price.toLocaleString()}원</span>
-                ${isSoldOut ? '<span style="color:red; font-weight:bold; margin-left:5px;">(품절)</span>' : ''}
+                ${isSoldOut ? '<span class="sold-out-badge">(품절)</span>' : ''}
               </div>
               <div class="cart-qty">
                  <button class="qty-btn" onclick="changeQty(${index}, -1)" ${isSoldOut?'disabled':''}>-</button>
@@ -126,7 +126,7 @@
               </div>
               <div class="cart-total-price">${isSoldOut ? '0원' : itemTotal.toLocaleString()+'원'}</div>
               <button class="btn-delete" onclick="removeItem(${index})">&times;</button>
-              <div style="width:100%;">${stockAlert}</div>
+              ${stockAlert ? `<div class="stock-alert">${stockAlert}</div>` : ''}
             </div>
           `;
       });
@@ -142,7 +142,7 @@
       document.getElementById('sum-price').innerText = totalPrice.toLocaleString() + '원';
       document.getElementById('shipping-cost').innerText = shipping.toLocaleString() + '원';
       document.getElementById('total-price').innerText = (totalPrice + shipping).toLocaleString() + '원';
-  }
+   }
   
   function changeQty(index, delta) {
       let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];

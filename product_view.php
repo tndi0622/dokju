@@ -107,16 +107,16 @@ include './include/header.php';
       </div>
 
       <!-- Actions -->
-      <div class="pd-actions">
+      <div class="pd-actions <?php echo (isset($item['stock']) && $item['stock'] <= 0) ? 'sold-out-mode' : ''; ?>">
         <?php if(isset($item['stock']) && $item['stock'] <= 0): ?>
-            <div style="grid-column: 1 / -1; display:flex; flex-direction:column; gap:10px; width:100%;">
-                <button disabled style="width:100%; padding:15px; background:#f5f5f5; color:#999; border:1px solid #ddd; font-weight:600; cursor:not-allowed;">품절된 상품입니다</button>
+            <div class="sold-out-container">
+                <button class="btn-soldout" disabled>품절된 상품입니다</button>
                 <?php if($is_restock_applied): ?>
-                    <button onclick="requestRestock(<?php echo $item['id']; ?>, 'cancel')" style="width:100%; padding:15px; background:#fff; border:1px solid #e74c3c; color:#e74c3c; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <button onclick="requestRestock(<?php echo $item['id']; ?>, 'cancel')" class="btn-restock cancel">
                          재입고 알림 취소
                     </button>
                 <?php else: ?>
-                    <button onclick="requestRestock(<?php echo $item['id']; ?>, 'apply')" style="width:100%; padding:15px; background:#fff; border:1px solid #2b2b2b; color:#2b2b2b; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <button onclick="requestRestock(<?php echo $item['id']; ?>, 'apply')" class="btn-restock apply">
                          재입고 알림 신청
                     </button>
                 <?php endif; ?>
@@ -133,7 +133,7 @@ include './include/header.php';
   <div class="detail-section">
      <h3 class="detail-title">상품 상세 설명</h3>
      <div class="detail-content">
-        <p style="font-size:18px; color:#2b2b2b; margin-bottom:20px;">
+        <p class="desc-highlight">
            <strong>"<?php echo htmlspecialchars($item['description']); ?>"</strong>
         </p>
         <p>
@@ -142,7 +142,7 @@ include './include/header.php';
            특별한 날, 소중한 사람과 함께 즐기기에 완벽한 선택이 될 것입니다.
         </p>
         <br>
-        <ul style="color:#666; padding-left:20px; line-height:1.8;">
+        <ul class="desc-list">
            <li>보관 방법: 직사광선을 피하고 서늘한 곳에 보관해 주세요. (개봉 후 냉장 보관 권장)</li>
            <li>음용 방법: 차게 해서 드시면 깔끔한 맛을, 데워서 드시면 깊은 풍미를 느낄 수 있습니다.</li>
         </ul>
@@ -155,13 +155,13 @@ include './include/header.php';
      <h3 class="detail-title">함께 보면 좋은 상품</h3>
      <div class="related-grid">
        <?php foreach($related_items as $r): ?>
-         <a href="/dokju/product_view.php?id=<?php echo $r['id']; ?>" class="product-card" style="text-decoration:none; border:none; background:transparent;">
-           <div class="img-box" style="aspect-ratio:4/5; background:#f4f0e6; border-radius:4px; margin-bottom:16px;">
-             <img src="<?php echo htmlspecialchars($r['image']); ?>" alt="<?php echo htmlspecialchars($r['product_name']); ?>" style="width:100%; height:100%; object-fit:contain; padding:20px;">
+         <a href="/dokju/product_view.php?id=<?php echo $r['id']; ?>" class="product-card related-card">
+           <div class="img-box">
+             <img src="<?php echo htmlspecialchars($r['image']); ?>" alt="<?php echo htmlspecialchars($r['product_name']); ?>">
            </div>
-           <div class="product-info" style="text-align:center;">
-             <h3 class="name" style="font-size:16px; margin-bottom:6px; color:#2b2b2b;"><?php echo htmlspecialchars($r['product_name']); ?></h3>
-             <p class="price" style="font-size:16px; color:#2b2b2b;"><strong><?php echo number_format($r['price']); ?></strong>원</p>
+           <div class="product-info">
+             <h3 class="name"><?php echo htmlspecialchars($r['product_name']); ?></h3>
+             <p class="price"><strong><?php echo number_format($r['price']); ?></strong>원</p>
            </div>
          </a>
        <?php endforeach; ?>
@@ -188,9 +188,9 @@ include './include/header.php';
         var qty = parseInt(document.getElementById('qty').value);
         var item = {
             id: <?php echo $item['id']; ?>,
-            name: "<?php echo addslashes($item['product_name']); ?>",
+            name: <?php echo json_encode($item['product_name']); ?>,
             price: <?php echo $item['price']; ?>,
-            image: "<?php echo addslashes($item['image']); ?>",
+            image: <?php echo json_encode($item['image']); ?>,
             qty: qty
         };
         

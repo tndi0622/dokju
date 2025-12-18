@@ -20,30 +20,7 @@ if($result->num_rows > 0) {
 }
 ?>
 
-<style>
-.order-container { max-width: 800px; margin: 80px auto; padding: 0 20px; }
-.order-title { font-size: 32px; font-weight: 700; margin-bottom: 40px; text-align: center; }
-.section-title { font-size: 20px; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #2b2b2b; padding-bottom: 10px; margin-top: 40px; }
-
-.order-items { border: 1px solid #ddd; border-top: none; }
-.order-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
-.order-item img { width: 60px; height: 60px; object-fit: contain; margin-right: 15px; background: #f9f9f9; }
-.order-item .info { flex: 1; }
-.order-item .name { font-weight: 500; margin-bottom: 5px; display: block; }
-.order-item .meta { font-size: 14px; color: #888; }
-.order-item .price { font-weight: 600; }
-
-.form-group { margin-bottom: 15px; }
-.form-group label { display: block; font-size: 14px; color: #666; margin-bottom: 5px; }
-.form-group input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 15px; box-sizing: border-box; }
-
-.total-summary { background: #f9f9f9; padding: 20px; border-radius: 4px; margin-top: 40px; }
-.summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 15px; color: #555; }
-.summary-row.final { font-size: 20px; font-weight: 700; color: #2b2b2b; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px; }
-
-.btn-pay { width: 100%; background: #2b2b2b; color: #fff; padding: 18px; font-size: 18px; font-weight: 600; border: none; border-radius: 4px; margin-top: 30px; cursor: pointer; transition: background 0.3s; }
-.btn-pay:hover { background: #444; }
-</style>
+<link rel="stylesheet" href="/dokju/css/order.css?v=<?php echo time(); ?>">
 
 <main class="order-container">
     <h2 class="order-title">주문/결제</h2>
@@ -66,13 +43,12 @@ if($result->num_rows > 0) {
             <input type="text" id="order-phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>" placeholder="010-0000-0000">
         </div>
         <div class="form-group">
-        <div class="form-group">
             <label>주소</label>
-            <div style="display:flex; gap:10px; margin-bottom:10px;">
-                <input type="text" id="sample6_postcode" placeholder="우편번호" readonly onclick="execDaumPostcode()" style="flex:1;">
-                <input type="button" onclick="execDaumPostcode()" value="주소 검색" style="width: auto; cursor:pointer; background:#2b2b2b; color:#fff; border:none; padding:12px 20px; font-weight:500;">
+            <div class="address-row">
+                <input type="text" id="sample6_postcode" placeholder="우편번호" readonly onclick="execDaumPostcode()" class="input-postcode">
+                <input type="button" onclick="execDaumPostcode()" value="주소 검색" class="btn-search-addr">
             </div>
-            <input type="text" id="sample6_address" placeholder="기본 주소" readonly onclick="execDaumPostcode()" style="margin-bottom:10px;">
+            <input type="text" id="sample6_address" placeholder="기본 주소" readonly onclick="execDaumPostcode()" class="input-addr-basic">
             <input type="text" id="sample6_detailAddress" placeholder="상세 주소를 입력하세요">
             <input type="hidden" id="sample6_extraAddress">
         </div>

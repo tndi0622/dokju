@@ -286,6 +286,7 @@
     font-size: 28px;
     font-weight: 700;
     margin-bottom: 15px;
+    word-break: break-all;
 }
 
 .view-meta {
@@ -301,6 +302,8 @@
     margin-bottom: 50px;
     font-size: 16px;
     color: #333;
+    word-break: break-all;
+    overflow-wrap: break-word;
 }
 
 .view-image {

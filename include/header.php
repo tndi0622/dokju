@@ -113,7 +113,7 @@
       
       const user = dbUser || localStorage.getItem('dokju_current_user');
       const isAdmin = <?php echo $isAdmin ? 'true' : 'false'; ?>;
-      let adminLink = isAdmin ? `<a href="/dokju/admin/dashboard.php" style="text-decoration:none; color:#ef6c00; margin-right:10px; font-weight:600;">⚙️ ADMIN</a>` : '';
+      let adminLink = isAdmin ? `<a href="/dokju/admin/dashboard.php" style="text-decoration:none; color:#ef6c00; margin-right:10px; font-weight:600;"> ADMIN</a>` : '';
 
       if(user) {
           // PC Menu Update

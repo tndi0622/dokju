@@ -78,7 +78,7 @@ include './include/header.php';
   <div class="view-actions">
     <button class="btn-like <?php echo $user_liked ? 'active' : ''; ?>" 
             onclick="toggleLike()" id="likeBtn">
-      👍 추천 <span id="likeCount"><?php echo $post['likes']; ?></span>
+       추천 <span id="likeCount"><?php echo $post['likes']; ?></span>
     </button>
   </div>
 

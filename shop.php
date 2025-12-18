@@ -1,4 +1,5 @@
 <?php
+session_start();
 include './include/db_connect.php'; 
 
 // Category Filter

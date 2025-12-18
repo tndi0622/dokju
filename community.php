@@ -121,9 +121,9 @@ include './include/header.php';
               <span><?php echo date('Y-m-d H:i', strtotime($row['created_at'])); ?></span>
             </div>
             <div class="post-stats">
-              <span class="stat-item">👁️ <span><?php echo $row['views']; ?></span></span>
-              <span class="stat-item">👍 <span><?php echo $row['likes']; ?></span></span>
-              <span class="stat-item">💬 <span><?php echo $comment_count; ?></span></span>
+              <span class="stat-item">조회수 <span><?php echo $row['views']; ?></span></span>
+              <span class="stat-item">추천수 <span><?php echo $row['likes']; ?></span></span>
+              <span class="stat-item">댓글수 <span><?php echo $comment_count; ?></span></span>
             </div>
           </div>
         </div>

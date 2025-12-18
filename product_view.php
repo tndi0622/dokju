@@ -113,11 +113,11 @@ include './include/header.php';
                 <button disabled style="width:100%; padding:15px; background:#f5f5f5; color:#999; border:1px solid #ddd; font-weight:600; cursor:not-allowed;">품절된 상품입니다</button>
                 <?php if($is_restock_applied): ?>
                     <button onclick="requestRestock(<?php echo $item['id']; ?>, 'cancel')" style="width:100%; padding:15px; background:#fff; border:1px solid #e74c3c; color:#e74c3c; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                        🔕 재입고 알림 취소
+                         재입고 알림 취소
                     </button>
                 <?php else: ?>
                     <button onclick="requestRestock(<?php echo $item['id']; ?>, 'apply')" style="width:100%; padding:15px; background:#fff; border:1px solid #2b2b2b; color:#2b2b2b; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                        🔔 재입고 알림 신청
+                         재입고 알림 신청
                     </button>
                 <?php endif; ?>
             </div>

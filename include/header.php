@@ -100,8 +100,10 @@ include_once __DIR__ . '/db_connect.php';
       <?php 
         $current_user_name = '';
         $isAdmin = false;
+        $isLoggedIn = false;
         
         if(isset($_SESSION['userid'])) {
+             $isLoggedIn = true;
              if($_SESSION['userid'] === 'admin') {
                  $isAdmin = true;
                  $current_user_name = '관리자';
@@ -113,6 +115,7 @@ include_once __DIR__ . '/db_connect.php';
                  if($row = $res->fetch_assoc()) {
                      $current_user_name = !empty($row['nickname']) ? $row['nickname'] : $row['name'];
                  }
+                 $stmt->close();
              }
              
              // Notification Logic
@@ -129,17 +132,22 @@ include_once __DIR__ . '/db_connect.php';
       ?>
       
       const dbUser = "<?php echo htmlspecialchars($current_user_name); ?>";
-      if(dbUser) {
+      const isLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
+      
+      // Sync LocalStorage with Server Session
+      if(isLoggedIn && dbUser) {
+          // If logged in on server, update localStorage
           localStorage.setItem('dokju_current_user', dbUser);
+      } else {
+          // If not logged in on server, clear localStorage to prevent 'ghost' login state
+          localStorage.removeItem('dokju_current_user');
       }
       
-      const user = dbUser || localStorage.getItem('dokju_current_user');
+      const user = isLoggedIn ? (dbUser || localStorage.getItem('dokju_current_user')) : null;
       const isAdmin = <?php echo $isAdmin ? 'true' : 'false'; ?>;
       const notiCount = <?php echo isset($noti_count) ? $noti_count : 0; ?>;
       const badge = notiCount > 0 ? `<span style="background:#e74c3c; color:#fff; font-size:10px; padding:1px 5px; border-radius:10px; margin-left:4px; vertical-align:text-top; line-height:1.2;">${notiCount}</span>` : '';
       
-      let adminLink = isAdmin ? `<a href="/dokju/admin/dashboard.php" style="text-decoration:none; color:#ef6c00; margin-right:10px; font-weight:600;"> ADMIN</a>` : '';
-
       if(user) {
           // PC Menu Update
           if(pcMenu) {
@@ -163,19 +171,23 @@ include_once __DIR__ . '/db_connect.php';
           
           // Mobile Menu Update
           if(mobileMenu) {
-              let mobileAdmin = isAdmin ? `<a href="/dokju/admin/dashboard.php" class="mobile-user-link admin">관리자 페이지</a>` : '';
               mobileMenu.innerHTML = `
                   <div class="mobile-welcome">${user}님 환영합니다</div>
                   <div class="mobile-user-links">
                       <a href="/dokju/mypage.php" class="mobile-user-link">마이페이지</a>
                       <a href="/dokju/cart.php" class="mobile-user-link">장바구니</a>
-                      ${mobileAdmin}
                   </div>
                   <button onclick="logoutHeader()" class="mobile-logout-btn">로그아웃</button>
               `;
           }
       } else {
           // Not Logged In
+           if(pcMenu) {
+               pcMenu.innerHTML = `
+                   <a href="/dokju/login.php" style="text-decoration:none; color:#2b2b2b;">LOGIN</a>
+                   <a href="/dokju/cart.php" style="text-decoration:none; color:#2b2b2b; font-weight:bold; margin-left:20px;">CART</a>
+               `;
+           }
            if(mobileMenu) {
               mobileMenu.innerHTML = `
                   <p style="margin-bottom:15px; color:#666;">로그인이 필요합니다</p>

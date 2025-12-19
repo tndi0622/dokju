@@ -1,5 +1,7 @@
 <?php 
 session_start();
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 include './include/db_connect.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -65,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         alert('$display_name 님 환영합니다.');
                         location.href='/dokju/index.php';
                       </script>";
+                exit;
             } else {
                 echo "<script>alert('비밀번호가 일치하지 않습니다.');</script>";
             }
@@ -87,7 +90,19 @@ include './include/header.php';
     </div>
     <div class="input-group">
       <label class="input-label">비밀번호</label>
-      <input type="password" name="pw" class="input-field" placeholder="비밀번호를 입력해주세요" required>
+      <div style="position:relative;">
+          <input type="password" name="pw" id="pwInput" class="input-field" placeholder="비밀번호를 입력해주세요" required style="padding-right:45px;">
+          <button type="button" onclick="togglePassword()" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#888; padding:5px; display:flex; align-items:center;">
+              <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg id="eyeOffIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+          </button>
+      </div>
     </div>
     
     <!-- Login Options -->
@@ -133,6 +148,22 @@ include './include/header.php';
           localStorage.setItem('dokju_saved_id', idInput.value);
       } else {
           localStorage.removeItem('dokju_saved_id');
+      }
+  }
+
+  function togglePassword() {
+      const pwInput = document.getElementById('pwInput');
+      const eyeIcon = document.getElementById('eyeIcon');
+      const eyeOffIcon = document.getElementById('eyeOffIcon');
+      
+      if (pwInput.type === 'password') {
+          pwInput.type = 'text';
+          eyeIcon.style.display = 'none';
+          eyeOffIcon.style.display = 'block';
+      } else {
+          pwInput.type = 'password';
+          eyeIcon.style.display = 'block';
+          eyeOffIcon.style.display = 'none';
       }
   }
   </script>

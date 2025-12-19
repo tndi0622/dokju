@@ -10,4 +10,3 @@ $naver_client_id = getenv('NAVER_CLIENT_ID');
 $naver_client_secret = getenv('NAVER_CLIENT_SECRET');
 $naver_redirect_uri = 'http://localhost/dokju/login_naver.php';
 $naver_state = 'RAMDOM_STATE_STRING'; // Generate a random string for state validation if possible
-?>

@@ -61,7 +61,10 @@ if ($httpCode == 200) {
             결제금액: <strong><?php echo number_format($json['totalAmount']); ?>원</strong>
         </p>
         
-        <a href="/dokju/shop.php" class="btn-home">쇼핑 계속하기</a>
+        <div style="display:flex; justify-content:center; gap:10px;">
+            <a href="/dokju/shop.php" class="btn-home">쇼핑 계속하기</a>
+            <a href="/dokju/mypage.php?tab=order" class="btn-home" style="background:#fff; color:#2b2b2b; border:1px solid #ddd;">주문 내역 보기</a>
+        </div>
         
         <script>
             // Clear Cart after successful payment

@@ -237,7 +237,8 @@ include './include/header.php';
                      <?php
                         // Get first item info
                         $oid = $row['order_uid'];
-                        $item_sql = "SELECT product_name, image, count(*) as cnt FROM order_items WHERE order_uid = '$oid'";
+                        // Fix: Use MAX() to handle ONLY_FULL_GROUP_BY sql_mode
+                        $item_sql = "SELECT MAX(product_name) as product_name, MAX(image) as image, count(*) as cnt FROM order_items WHERE order_uid = '$oid'";
                         $item_row = $conn->query($item_sql)->fetch_assoc();
                         $title = $item_row['product_name'];
                         if($item_row['cnt'] > 1) {
@@ -251,10 +252,22 @@ include './include/header.php';
                             'PREPARING' => '배송준비',
                             'SHIPPING' => '배송중',
                             'DELIVERED' => '배송완료',
-                            'CANCELLED' => '주문취소'
+                            'CANCELLED' => '주문취소',
+                            'COMPLETED' => '주문완료'
                         ];
                         $status_text = $status_map[$row['status']] ?? $row['status'];
-                        $status_color = ($row['status'] == 'PAID') ? '#4CAF50' : '#888';
+                        
+                        // Status Colors
+                        $color_map = [
+                            'PENDING' => '#333333',   // 결제대기 (Black)
+                            'PAID' => '#4CAF50',      // 결제완료 (Green)
+                            'COMPLETED' => '#4CAF50', // 결제완료 (Green)
+                            'PREPARING' => '#FF9800', // 배송준비 (Orange)
+                            'SHIPPING' => '#2196F3',  // 배송중 (Blue)
+                            'DELIVERED' => '#1A237E', // 배송완료 (Navy)
+                            'CANCELLED' => '#F44336'  // 주문취소 (Red)
+                        ];
+                        $status_color = $color_map[$row['status']] ?? '#888';
                      ?>
                      
                      <!-- Order Card -->

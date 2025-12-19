@@ -121,6 +121,8 @@
 
 .mypage-content {
     flex: 3;
+    min-width: 0;
+    /* Fix flex item overflow issue with long text */
 }
 
 .my-section {

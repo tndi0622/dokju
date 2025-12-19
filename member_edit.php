@@ -40,7 +40,7 @@ include './include/header.php';
 <main class="member-container">
   <h2 class="member-title">정보 수정</h2>
   
-  <form class="member-form" method="POST" action="">
+  <form class="member-form" method="POST" action="" onsubmit="return validateEdit()">
     <div class="input-group">
       <label class="input-label">아이디</label>
       <input type="text" class="input-field" value="<?php echo $userid; ?>" disabled style="background:#f5f5f5;">
@@ -80,5 +80,34 @@ include './include/header.php';
 document.getElementById('phone').addEventListener('input', function(e) {
     this.value = this.value.replace(/[^0-9]/g, '');
 });
+
+function validateEdit() {
+    const form = document.querySelector('.member-form');
+    // Name is required but usually fine. Nickname is critical.
+    const nickname = form.nickname.value.trim();
+    
+    // Validate Nickname (Same logic as Join)
+    const isKorean = /[가-힣]/.test(nickname);
+    if(isKorean) {
+        if(nickname.length < 2) {
+            alert('한글 닉네임은 2글자 이상이어야 합니다.');
+            return false;
+        }
+        if(nickname.length > 10) {
+            alert('한글 닉네임은 최대 10글자까지 가능합니다.');
+            return false;
+        }
+    } else {
+        if(nickname.length < 4) {
+            alert('영문 닉네임은 4글자 이상이어야 합니다.');
+            return false;
+        }
+        if(nickname.length > 16) {
+            alert('영문 닉네임은 최대 16글자까지 가능합니다.');
+            return false;
+        }
+    }
+    return true;
+}
 </script>
 <?php include './include/footer.php'; ?>

@@ -247,12 +247,14 @@ include './include/header.php';
                         
                         $status_map = [
                             'PENDING' => '결제대기',
-                            'COMPLETED' => '결제완료', 
+                            'PAID' => '결제완료',
+                            'PREPARING' => '배송준비',
                             'SHIPPING' => '배송중',
-                            'DELIVERED' => '배송완료'
+                            'DELIVERED' => '배송완료',
+                            'CANCELLED' => '주문취소'
                         ];
                         $status_text = $status_map[$row['status']] ?? $row['status'];
-                        $status_color = ($row['status'] == 'COMPLETED') ? '#4CAF50' : '#888';
+                        $status_color = ($row['status'] == 'PAID') ? '#4CAF50' : '#888';
                      ?>
                      
                      <!-- Order Card -->

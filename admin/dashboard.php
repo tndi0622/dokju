@@ -118,7 +118,7 @@ $recent_posts = $conn->query("SELECT p.id, p.title, p.category, p.created_at, u.
                     </thead>
                     <tbody>
                         <?php while($post = $recent_posts->fetch_assoc()): 
-                            $cat_text = ['review'=>'리뷰', 'recommend'=>'추천', 'question'=>'질문'][$post['category']] ?? $post['category'];
+                            $cat_text = ['review'=>'리뷰', 'recommend'=>'추천', 'question'=>'질문', 'free'=>'자유'][$post['category']] ?? $post['category'];
                         ?>
                         <tr>
                             <td><span class="badge badge-warning"><?php echo $cat_text; ?></span></td>

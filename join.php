@@ -85,16 +85,27 @@ function validateJoin() {
     const phone = form.phone.value.trim();
     
     // Validate Nickname
-    // Korean >= 2 chars OR English >= 4 chars
+    // Validate Nickname
+    // Korean >= 2 chars, English >= 4 chars
+    // Max Length: Korean 10 chars, English 16 chars
     const isKorean = /[가-힣]/.test(nickname);
+    
     if(isKorean) {
         if(nickname.length < 2) {
             alert('한글 닉네임은 2글자 이상이어야 합니다.');
             return false;
         }
+        if(nickname.length > 10) { // Limit Korean to 10
+            alert('한글 닉네임은 최대 10글자까지 가능합니다.');
+            return false;
+        }
     } else {
         if(nickname.length < 4) {
             alert('영문 닉네임은 4글자 이상이어야 합니다.');
+            return false;
+        }
+        if(nickname.length > 16) { // Limit English to 16
+            alert('영문 닉네임은 최대 16글자까지 가능합니다.');
             return false;
         }
     }

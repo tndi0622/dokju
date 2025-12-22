@@ -147,54 +147,88 @@ include_once __DIR__ . '/db_connect.php';
       const isAdmin = <?php echo $isAdmin ? 'true' : 'false'; ?>;
       const notiCount = <?php echo isset($noti_count) ? $noti_count : 0; ?>;
       const badge = notiCount > 0 ? `<span style="background:#e74c3c; color:#fff; font-size:10px; padding:1px 5px; border-radius:10px; margin-left:4px; vertical-align:text-top; line-height:1.2;">${notiCount}</span>` : '';
-      
-      if(user) {
-          // PC Menu Update
-          if(pcMenu) {
-              pcMenu.innerHTML = `
-                <span style="color:#888; margin-right:15px; font-weight:500;">${user}님</span>
-                <a href="/dokju/mypage.php" style="text-decoration:none; color:#2b2b2b; margin-right:10px;">MY PAGE${badge}</a>
-                
-                <a href="javascript:void(0)" onclick="logoutHeader();" title="로그아웃" style="text-decoration:none; color:#888; margin-right:20px; display:flex; align-items:center;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                        <polyline points="16 17 21 12 16 7"></polyline>
-                        <line x1="21" y1="12" x2="9" y2="12"></line>
-                    </svg>
-                </a>
-                <span style="border-left:1px solid #ddd; height:12px; display:inline-block; vertical-align:middle; margin-right:20px;"></span>
-                <a href="/dokju/cart.php" style="text-decoration:none; color:#fff; background:#2b2b2b; padding:6px 14px; border-radius:2px; font-size:13px;">CART</a>
-              `;
-              pcMenu.style.alignItems = "center";
-              pcMenu.style.display = "flex";
+
+      function renderMenu(cartCount) {
+          const cartBadge = cartCount > 0 ? `<span class="cart-badge">${cartCount}</span>` : '';
+          
+           // Update Static Mobile Cart
+          const mbBtn = document.querySelector('.mobile-cart-btn');
+          if(mbBtn) {
+              const existing = mbBtn.querySelector('.cart-badge');
+              if(existing) existing.remove();
+              if(cartCount > 0) {
+                 const sp = document.createElement('span');
+                 sp.className='cart-badge mobile';
+                 sp.innerText=cartCount;
+                 mbBtn.appendChild(sp);
+              }
           }
           
-          // Mobile Menu Update
-          if(mobileMenu) {
-              mobileMenu.innerHTML = `
-                  <div class="mobile-welcome">${user}님 환영합니다</div>
-                  <div class="mobile-user-links">
-                      <a href="/dokju/mypage.php" class="mobile-user-link">마이페이지</a>
-                      <a href="/dokju/cart.php" class="mobile-user-link">장바구니</a>
-                  </div>
-                  <button onclick="logoutHeader()" class="mobile-logout-btn">로그아웃</button>
-              `;
+          if(user) {
+              // PC Menu Update
+              if(pcMenu) {
+                  pcMenu.innerHTML = `
+                    <span style="color:#888; margin-right:15px; font-weight:500;">${user}님</span>
+                    <a href="/dokju/mypage.php" style="text-decoration:none; color:#2b2b2b; margin-right:10px;">MY PAGE${badge}</a>
+                    
+                    <a href="javascript:void(0)" onclick="logoutHeader();" title="로그아웃" style="text-decoration:none; color:#888; margin-right:20px; display:flex; align-items:center;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </a>
+                    <span style="border-left:1px solid #ddd; height:12px; display:inline-block; vertical-align:middle; margin-right:20px;"></span>
+                    <a href="/dokju/cart.php" style="text-decoration:none; color:#fff; background:#2b2b2b; padding:6px 14px; border-radius:2px; font-size:13px; display:inline-flex; align-items:center;">CART${cartBadge}</a>
+                  `;
+                  pcMenu.style.alignItems = "center";
+                  pcMenu.style.display = "flex";
+              }
+              
+              // Mobile Menu Update
+              if(mobileMenu) {
+                  mobileMenu.innerHTML = `
+                      <div class="mobile-welcome">${user}님 환영합니다</div>
+                      <div class="mobile-user-links">
+                          <a href="/dokju/mypage.php" class="mobile-user-link">마이페이지</a>
+                          <a href="/dokju/cart.php" class="mobile-user-link">장바구니 <span style="font-weight:bold; color:#e74c3c;">${cartCount > 0 ? '('+cartCount+')' : ''}</span></a>
+                      </div>
+                      <button onclick="logoutHeader()" class="mobile-logout-btn">로그아웃</button>
+                  `;
+              }
+          } else {
+               if(pcMenu) {
+                   pcMenu.innerHTML = `
+                       <a href="/dokju/login.php" style="text-decoration:none; color:#2b2b2b;">LOGIN</a>
+                       <a href="/dokju/cart.php" style="text-decoration:none; color:#2b2b2b; font-weight:bold; margin-left:20px; display:inline-flex; align-items:center;">CART${cartBadge}</a>
+                   `;
+               }
+               if(mobileMenu) {
+                  mobileMenu.innerHTML = `
+                      <p style="margin-bottom:15px; color:#666;">로그인이 필요합니다</p>
+                      <a href="/dokju/login.php" class="mobile-login-btn">로그인 / 회원가입</a>
+                  `;
+               }
           }
-      } else {
-          // Not Logged In
-           if(pcMenu) {
-               pcMenu.innerHTML = `
-                   <a href="/dokju/login.php" style="text-decoration:none; color:#2b2b2b;">LOGIN</a>
-                   <a href="/dokju/cart.php" style="text-decoration:none; color:#2b2b2b; font-weight:bold; margin-left:20px;">CART</a>
-               `;
-           }
-           if(mobileMenu) {
-              mobileMenu.innerHTML = `
-                  <p style="margin-bottom:15px; color:#666;">로그인이 필요합니다</p>
-                  <a href="/dokju/login.php" class="mobile-login-btn">로그인 / 회원가입</a>
-              `;
-           }
       }
+
+      window.updateHeaderCartCount = function() {
+          let cartCount = 0;
+          try {
+              const c = JSON.parse(localStorage.getItem('dokju_cart')) || [];
+              cartCount = c.reduce((a, b) => a + (parseInt(b.qty)||0), 0);
+          } catch(e){}
+          renderMenu(cartCount);
+      };
+
+      // Init
+      window.updateHeaderCartCount();
+
+      window.addEventListener('storage', function(e) {
+          if(e.key === 'dokju_cart') {
+             window.updateHeaderCartCount();
+          }
+      });
   })();
 
   // Close mobile menu on overlay click

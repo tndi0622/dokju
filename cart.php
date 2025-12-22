@@ -135,6 +135,7 @@
          localStorage.setItem(CART_KEY, JSON.stringify(cart));
       }
       
+      if(window.updateHeaderCartCount) window.updateHeaderCartCount();
       listEl.innerHTML = html;
       
       // Update Summary

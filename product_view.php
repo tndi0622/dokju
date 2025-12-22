@@ -207,6 +207,7 @@ include './include/header.php';
         }
         
         localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        if(window.updateHeaderCartCount) window.updateHeaderCartCount();
         
         alert('장바구니에 [ ' + item.name + ' ] ' + qty + '개를 담았습니다.\n장바구니 페이지에서 확인하세요.');
     }

@@ -83,19 +83,19 @@ include './include/header.php';
       <div class="pd-specs">
         <div class="spec-row">
           <span class="spec-label">주종</span>
-          <span class="spec-val"><?php echo htmlspecialchars($item['type']); ?></span>
+          <span class="spec-val"><?php echo htmlspecialchars($item['type'] ?? ''); ?></span>
         </div>
         <div class="spec-row">
           <span class="spec-label">생산지</span>
-          <span class="spec-val"><?php echo htmlspecialchars($item['region']); ?></span>
+          <span class="spec-val"><?php echo htmlspecialchars($item['region'] ?? ''); ?></span>
         </div>
         <div class="spec-row">
           <span class="spec-label">도수</span>
-          <span class="spec-val"><?php echo htmlspecialchars($item['abv']); ?></span>
+          <span class="spec-val"><?php echo htmlspecialchars($item['abv'] ?? ''); ?></span>
         </div>
         <div class="spec-row">
           <span class="spec-label">정미율</span>
-          <span class="spec-val"><?php echo htmlspecialchars($item['rice_polish']); ?></span>
+          <span class="spec-val"><?php echo htmlspecialchars($item['rice_polish'] ?? ''); ?></span>
         </div>
       </div>
 

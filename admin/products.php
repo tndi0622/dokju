@@ -77,21 +77,21 @@ $products = $conn->query("SELECT * FROM products ORDER BY id DESC");
                     <tbody>
                         <?php while($product = $products->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo $product['id']; ?></td>
-                            <td>
+                            <td data-label="ID"><?php echo $product['id']; ?></td>
+                            <td data-label="이미지">
                                 <img src="<?php echo $product['image']; ?>" 
                                      alt="<?php echo htmlspecialchars($product['product_name']); ?>" 
                                      style="width:50px; height:auto; border-radius:4px;">
                             </td>
-                            <td><?php echo htmlspecialchars($product['product_name']); ?></td>
-                            <td><?php echo htmlspecialchars($product['region']); ?></td>
-                            <td><?php echo htmlspecialchars($product['type']); ?></td>
-                            <td style="<?php echo $product['stock'] <= 0 ? 'color:red; font-weight:bold;' : ''; ?>">
+                            <td data-label="상품명"><?php echo htmlspecialchars($product['product_name']); ?></td>
+                            <td data-label="지역"><?php echo htmlspecialchars($product['region']); ?></td>
+                            <td data-label="종류"><?php echo htmlspecialchars($product['type']); ?></td>
+                            <td data-label="재고" style="<?php echo $product['stock'] <= 0 ? 'color:red; font-weight:bold;' : ''; ?>">
                                 <?php echo number_format($product['stock']); ?>개
                                 <?php if($product['stock'] <= 0) echo '(품절)'; ?>
                             </td>
-                            <td><?php echo number_format($product['price']); ?>원</td>
-                            <td>
+                            <td data-label="가격"><?php echo number_format($product['price']); ?>원</td>
+                            <td data-label="관리">
                                 <a href="/dokju/admin/product_edit.php?id=<?php echo $product['id']; ?>" 
                                    class="btn-primary btn-sm btn-edit">수정</a>
                                 <a href="/dokju/admin/product_process.php?mode=delete&id=<?php echo $product['id']; ?>" 

@@ -68,12 +68,12 @@ $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY crea
                     <tbody>
                         <?php while($user = $users->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo $user['id']; ?></td>
-                            <td><?php echo htmlspecialchars($user['userid']); ?></td>
-                            <td><?php echo htmlspecialchars($user['name']); ?></td>
-                            <td><?php echo htmlspecialchars($user['nickname'] ?? '-'); ?></td>
-                            <td><?php echo htmlspecialchars($user['phone'] ?? '-'); ?></td>
-                            <td>
+                            <td data-label="ID"><?php echo $user['id']; ?></td>
+                            <td data-label="아이디"><?php echo htmlspecialchars($user['userid']); ?></td>
+                            <td data-label="이름"><?php echo htmlspecialchars($user['name']); ?></td>
+                            <td data-label="닉네임"><?php echo htmlspecialchars($user['nickname'] ?? '-'); ?></td>
+                            <td data-label="전화번호"><?php echo htmlspecialchars($user['phone'] ?? '-'); ?></td>
+                            <td data-label="소셜타입">
                                 <?php 
                                 $social = $user['social_type'] ?? 'none';
                                 if ($social === 'none' || empty($social)) {
@@ -85,8 +85,8 @@ $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY crea
                                 }
                                 ?>
                             </td>
-                            <td><?php echo date('Y-m-d', strtotime($user['created_at'])); ?></td>
-                            <td>
+                            <td data-label="가입일"><?php echo date('Y-m-d', strtotime($user['created_at'])); ?></td>
+                            <td data-label="관리">
                                 <a href="/dokju/admin/user_process.php?mode=delete&id=<?php echo $user['id']; ?>" 
                                    class="btn-primary btn-sm btn-delete" 
                                    onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
@@ -98,5 +98,35 @@ $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY crea
             </div>
         </main>
     </div>
+
+    <!-- Floating Action Button -->
+    <a href="/dokju/index.php" class="fab-site-link" title="사이트로 이동">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </a>
+    <style>
+        .fab-site-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #2b2b2b;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .fab-site-link:hover {
+            transform: translateY(-5px);
+            background: #444;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+    </style>
 </body>
 </html>

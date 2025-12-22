@@ -76,9 +76,9 @@ $posts = $conn->query("SELECT p.*, u.name, u.nickname,
                             $display_name = !empty($post['nickname']) ? $post['nickname'] : $post['name'];
                         ?>
                         <tr>
-                            <td><?php echo $post['id']; ?></td>
-                            <td><span class="badge badge-warning"><?php echo $cat_text; ?></span></td>
-                            <td>
+                            <td data-label="ID"><?php echo $post['id']; ?></td>
+                            <td data-label="카테고리"><span class="badge badge-warning"><?php echo $cat_text; ?></span></td>
+                            <td data-label="제목">
                                 <div style="max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     <a href="/dokju/community_view.php?id=<?php echo $post['id']; ?>" 
                                        target="_blank" 
@@ -87,12 +87,12 @@ $posts = $conn->query("SELECT p.*, u.name, u.nickname,
                                     </a>
                                 </div>
                             </td>
-                            <td><?php echo htmlspecialchars($display_name); ?></td>
-                            <td><?php echo $post['views']; ?></td>
-                            <td><?php echo $post['likes']; ?></td>
-                            <td><?php echo $post['comment_count']; ?></td>
-                            <td><?php echo date('Y-m-d', strtotime($post['created_at'])); ?></td>
-                            <td>
+                            <td data-label="작성자"><?php echo htmlspecialchars($display_name); ?></td>
+                            <td data-label="조회"><?php echo $post['views']; ?></td>
+                            <td data-label="추천"><?php echo $post['likes']; ?></td>
+                            <td data-label="댓글"><?php echo $post['comment_count']; ?></td>
+                            <td data-label="작성일"><?php echo date('Y-m-d', strtotime($post['created_at'])); ?></td>
+                            <td data-label="관리">
                                 <a href="/dokju/admin/post_process.php?mode=delete&id=<?php echo $post['id']; ?>" 
                                    class="btn-primary btn-sm btn-delete" 
                                    onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
@@ -104,5 +104,35 @@ $posts = $conn->query("SELECT p.*, u.name, u.nickname,
             </div>
         </main>
     </div>
+
+    <!-- Floating Action Button -->
+    <a href="/dokju/index.php" class="fab-site-link" title="사이트로 이동">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </a>
+    <style>
+        .fab-site-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #2b2b2b;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 9999;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .fab-site-link:hover {
+            transform: translateY(-5px);
+            background: #444;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+    </style>
 </body>
 </html>

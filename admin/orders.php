@@ -32,9 +32,13 @@ $result = $conn->query($sql);
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - 배송 관리</title>
     <link rel="stylesheet" href="/dokju/css/admin.css?v=<?php echo time(); ?>">
     <style>
+        /* Default Desktop Style */
+        .admin-table th, .admin-table td { white-space: nowrap; }
+
         .status-select {
             padding: 6px 10px;
             border: 1px solid #ddd;
@@ -104,6 +108,53 @@ $result = $conn->query($sql);
         .st-SHIPPING { background: #3498db; }
         .st-DELIVERED { background: #2c3e50; }
         .st-CANCELLED { background: #e74c3c; }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 900px) {
+            /* Hide Sidebar Site Link */
+            .nav-link-site { display: none !important; }
+
+            /* Card Layout for Table */
+            .admin-table { min-width: 0 !important; width: 100%; display: block; }
+            .admin-table thead { display: none; }
+            .admin-table tbody { display: block; width: 100%; }
+            .admin-table tr {
+                display: block;
+                margin-bottom: 20px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background: #fff;
+                padding: 15px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            }
+            .admin-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #f5f5f5;
+                padding: 10px 0;
+                text-align: right;
+                font-size: 14px;
+            }
+            .admin-table td:last-child {
+                border-bottom: none;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
+            .admin-table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                color: #555;
+                text-align: left;
+                margin-right: 15px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            /* Adjust status form in card */
+            .status-form { width: 100%; text-align: right; }
+            .status-select { width: auto; min-width: 100px; }
+        }
     </style>
 </head>
 <body>
@@ -121,7 +172,7 @@ $result = $conn->query($sql);
                     <li><a href="/dokju/admin/users.php"> 회원 관리</a></li>
                     <li><a href="/dokju/admin/orders.php" class="active"> 배송 관리</a></li>
                     <li><a href="/dokju/admin/posts.php"> 커뮤니티 관리</a></li>
-                    <li><a href="/dokju/index.php" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;"> 사이트로 이동</a></li>
+                    <li><a href="/dokju/index.php" class="nav-link-site" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px;"> 사이트로 이동</a></li>
                 </ul>
             </nav>
         </aside>
@@ -137,7 +188,7 @@ $result = $conn->query($sql);
 
             <div class="content-box">
                 <h3>주문 내역</h3>
-                <div style="overflow-x:auto;">
+                <div>
                     <table class="admin-table">
                         <thead>
                             <tr>
@@ -167,16 +218,16 @@ $result = $conn->query($sql);
                                     $st_text = isset($st_map[$row['status']]) ? $st_map[$row['status']] : $row['status'];
                                 ?>
                                 <tr>
-                                    <td><?php echo $row['order_uid']; ?></td>
-                                    <td><?php echo $row['userid']; ?></td>
-                                    <td><?php echo $row['receiver_name']; ?></td>
-                                    <td><?php echo number_format($row['total_amount']); ?>원</td>
-                                    <td><?php echo $fmt_date; ?></td>
-                                    <td>
+                                    <td data-label="주문 번호"><?php echo $row['order_uid']; ?></td>
+                                    <td data-label="주문자 ID"><?php echo $row['userid']; ?></td>
+                                    <td data-label="수령인"><?php echo $row['receiver_name']; ?></td>
+                                    <td data-label="결제 금액"><?php echo number_format($row['total_amount']); ?>원</td>
+                                    <td data-label="주문 일시"><?php echo $fmt_date; ?></td>
+                                    <td data-label="상태">
                                         <span class="badge-status st-<?php echo $row['status']; ?>"><?php echo $st_text; ?></span>
                                     </td>
-                                    <td>
-                                        <div style="display:flex; gap:5px; align-items:center;">
+                                    <td data-label="관리">
+                                        <div style="display:flex; gap:5px; align-items:center; justify-content: flex-end;">
                                             <button onclick="viewDetails('<?php echo $row['order_uid']; ?>')" style="padding:6px 12px; border:1px solid #ddd; background:#eee; cursor:pointer; margin-right:5px; white-space:nowrap;">상세</button>
                                             
                                             <form method="POST" action="" class="status-form" style="margin:0;">
@@ -247,9 +298,7 @@ $result = $conn->query($sql);
             background: #444;
             box-shadow: 0 6px 16px rgba(0,0,0,0.4);
         }
-        .admin-table th, .admin-table td {
-            white-space: nowrap;
-        }
+
     </style>
     
     <script>

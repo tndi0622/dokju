@@ -230,29 +230,107 @@
 */
 
 @media (max-width: 900px) {
+    .view-container {
+        padding: 40px 20px;
+    }
+
     .product-detail {
         flex-direction: column;
-        gap: 40px;
+        gap: 30px;
+        margin-bottom: 60px;
+    }
+
+    /* Make image bigger on mobile */
+    .pd-image {
+        aspect-ratio: 1/1;
+    }
+
+    .pd-image img {
+        padding: 20px;
+    }
+
+    .pd-info {
+        padding-top: 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .pd-brand {
+        font-size: 18px;
+        margin-bottom: 8px;
+        width: 100%;
+    }
+
+    .pd-title {
+        font-size: 32px;
+        /* Increased */
+        word-break: keep-all;
+        text-align: center;
+        width: 100%;
+    }
+
+    .pd-price {
+        font-size: 28px;
+        /* Increased */
+        margin-bottom: 24px;
+        padding-bottom: 24px;
+        width: 100%;
+        /* Keep border full width or adjust? keeping default behavior but text centered */
+        border-bottom: 1px solid #eee;
+        text-align: center;
+    }
+
+    .pd-specs {
+        width: 100%;
+        margin-bottom: 24px;
+    }
+
+    .spec-row {
+        font-size: 18px;
+        /* Larger */
+        justify-content: center;
+        /* Center the row content */
+    }
+
+    .pd-qty {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .qty-btn {
+        width: 50px;
+        height: 50px;
+    }
+
+    .qty-input {
+        width: 80px;
+        height: 50px;
     }
 
     .related-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
     }
 
     /* Mobile Actions fix */
     .pd-actions {
         display: flex;
         flex-direction: row;
-        gap: 8px;
+        gap: 10px;
         width: 100%;
-        margin-top: 15px;
+        margin-top: 10px;
     }
 
     .btn-buy,
     .btn-cart {
         padding: 0;
-        height: 52px;
-        font-size: 15px;
+        height: 56px;
+        font-size: 18px;
+        /* Easier to read */
         justify-content: center;
         align-items: center;
         display: flex;
@@ -262,12 +340,37 @@
 
     .btn-cart {
         flex: 1;
-        font-size: 14px;
     }
 
     .btn-buy {
         flex: 2;
         font-weight: 700;
+    }
+
+    .detail-section {
+        margin-bottom: 60px;
+    }
+
+    .detail-title {
+        font-size: 24px;
+        /* Increased */
+        margin-bottom: 20px;
+    }
+
+    .detail-content {
+        padding: 30px 15px;
+        /* Reduced side padding to widen text area */
+        font-size: 17px;
+        line-height: 1.7;
+        text-align: center;
+        /* Requested center alignment */
+        word-break: keep-all;
+        /* Prevent awkward word breaks in center align */
+    }
+
+    .desc-highlight {
+        font-size: 20px;
+        /* Stand out more */
     }
 }
 

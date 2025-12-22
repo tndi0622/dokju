@@ -95,9 +95,9 @@ $recent_posts = $conn->query("SELECT p.id, p.title, p.category, p.created_at, u.
                     <tbody>
                         <?php while($user = $recent_users->fetch_assoc()): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($user['userid']); ?></td>
-                            <td><?php echo htmlspecialchars($user['name']); ?></td>
-                            <td><?php echo date('Y-m-d H:i', strtotime($user['created_at'])); ?></td>
+                            <td data-label="아이디"><?php echo htmlspecialchars($user['userid']); ?></td>
+                            <td data-label="이름"><?php echo htmlspecialchars($user['name']); ?></td>
+                            <td data-label="가입일"><?php echo date('Y-m-d H:i', strtotime($user['created_at'])); ?></td>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -121,14 +121,14 @@ $recent_posts = $conn->query("SELECT p.id, p.title, p.category, p.created_at, u.
                             $cat_text = ['review'=>'리뷰', 'recommend'=>'추천', 'question'=>'질문', 'free'=>'자유'][$post['category']] ?? $post['category'];
                         ?>
                         <tr>
-                            <td><span class="badge badge-warning"><?php echo $cat_text; ?></span></td>
-                            <td>
+                            <td data-label="카테고리"><span class="badge badge-warning"><?php echo $cat_text; ?></span></td>
+                            <td data-label="제목">
                                 <div style="max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="<?php echo htmlspecialchars($post['title']); ?>">
                                     <?php echo htmlspecialchars($post['title']); ?>
                                 </div>
                             </td>
-                            <td><?php echo htmlspecialchars($post['name']); ?></td>
-                            <td><?php echo date('Y-m-d H:i', strtotime($post['created_at'])); ?></td>
+                            <td data-label="작성자"><?php echo htmlspecialchars($post['name']); ?></td>
+                            <td data-label="작성일"><?php echo date('Y-m-d H:i', strtotime($post['created_at'])); ?></td>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>

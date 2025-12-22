@@ -306,6 +306,13 @@
     overflow-wrap: break-word;
 }
 
+.view-content img,
+.view-content video,
+.view-content iframe {
+    max-width: 100%;
+    height: auto;
+}
+
 .view-image {
     max-width: 100%;
     height: auto;

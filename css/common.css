@@ -854,3 +854,92 @@ footer {
   position: relative;
   /* Ensure badge is relative to this */
 }
+
+/* Age Verification Modal */
+.age-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  display: none;
+  /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+}
+
+.age-modal-content {
+  background: #fff;
+  padding: 40px;
+  width: 90%;
+  max-width: 450px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.age-modal-title {
+  font-family: "Shilla", serif;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2b2b2b;
+  word-break: keep-all;
+}
+
+.age-modal-desc {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 30px;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+.age-modal-btns {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.age-btn {
+  flex: 1;
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+  border-radius: 4px;
+  word-break: keep-all;
+}
+
+.age-btn.confirm {
+  background: #2b2b2b;
+  color: #fff;
+  border-color: #2b2b2b;
+}
+
+.age-btn.confirm:hover {
+  background: #4a3b32;
+}
+
+.age-btn.deny:hover {
+  background: #eee;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -75,6 +75,23 @@ include_once __DIR__ . '/db_connect.php';
     </div>
 </div>
 
+
+<!-- Age Verification Modal -->
+<div id="ageModal" class="age-modal-overlay">
+    <div class="age-modal-content">
+        <div class="age-modal-title">성인 인증</div>
+        <p class="age-modal-desc">
+            본 사이트는 주류를 판매하는 사이트로,<br>
+            <strong>만 19세 이상</strong>만 이용할 수 있습니다.<br>
+            귀하는 만 19세 이상입니까?
+        </p>
+        <div class="age-modal-btns">
+            <button class="age-btn confirm" onclick="confirmAge(true)">네, 성인입니다</button>
+            <button class="age-btn deny" onclick="confirmAge(false)">아니요</button>
+        </div>
+    </div>
+</div>
+
 <script>
   function toggleMobileMenu() {
       const menu = document.getElementById('mobileMenuOverlay');
@@ -91,6 +108,36 @@ include_once __DIR__ . '/db_connect.php';
       localStorage.removeItem('dokju_current_user');
       location.href = '/dokju/logout.php';
   }
+  
+  // Age Verification Script
+  function checkAgeVerification() {
+      const isVerified = localStorage.getItem('dokju_age_verified');
+      if(isVerified !== 'true') {
+          // Show Modal
+          const modal = document.getElementById('ageModal');
+          if(modal) {
+              modal.style.display = 'flex';
+              document.body.style.overflow = 'hidden'; // Block scroll
+          }
+      }
+  }
+
+  function confirmAge(isAdult) {
+      if(isAdult) {
+          localStorage.setItem('dokju_age_verified', 'true');
+          const modal = document.getElementById('ageModal');
+          if(modal) {
+              modal.style.display = 'none';
+              document.body.style.overflow = '';
+          }
+      } else {
+          alert('만 19세 미만은 이용할 수 없습니다.');
+          location.href = 'https://www.google.com'; // Redirect or history.back
+      }
+  }
+  
+  // Check on Load
+  window.addEventListener('DOMContentLoaded', checkAgeVerification);
 
   (function(){
       const pcMenu = document.getElementById('user-auth-menu');

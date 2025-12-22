@@ -31,7 +31,7 @@ include_once __DIR__ . '/db_connect.php';
     </button>
 
     <!-- Logo (Center on Mobile, Left on PC via CSS) -->
-    <div class="logo"><a href="/dokju/index.php"><img src="/dokju/images/logo.png" alt="獨酒 로고"></a></div>
+    <div class="logo"><a href="/dokju/index.php"><img src="/dokju/images/new_logo.png" alt="獨酒 로고"></a></div>
     
     <!-- Mobile: Right Cart -->
     <a href="/dokju/cart.php" class="mobile-cart-btn mobile-only">🛒</a>

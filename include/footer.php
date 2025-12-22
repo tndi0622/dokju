@@ -3,7 +3,7 @@
     <div class="footer-content">
       
       <div class="footer-info">
-        <img src="/dokju/images/logo.png" alt="獨酒" style="width:100px; display:block; margin-bottom:24px;">
+        <img src="/dokju/images/new_logo.png" alt="獨酒" style="width:100px; display:block; margin-bottom:24px;">
         <p style="margin:0; line-height:1.8; color:#555;">
           주소 : 서울시 ○○구 ○○로 00<br>
           전화번호 : 02-000-0000<br>

@@ -615,10 +615,25 @@ footer {
 
 .mobile-user-area {
   margin-top: 20px;
+  margin-bottom: 30px;
+  /* Add space below */
   background: #fdfbf7;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+  position: relative;
+}
+
+.mobile-user-area::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #eee;
+  /* Divider line */
+  position: absolute;
+  bottom: -15px;
+  left: 0;
 }
 
 .mobile-welcome {

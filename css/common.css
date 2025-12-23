@@ -224,7 +224,11 @@ nav a.active::after {
 
   .footer-info {
     width: 100%;
-    padding: 25px;
+    max-width: 600px;
+    /* Increased for tablet */
+    padding: 30px;
+    margin: 0 auto;
+    /* Force Center */
   }
 
   .footer-sns {

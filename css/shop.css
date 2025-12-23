@@ -259,8 +259,17 @@
     }
 
     .filters a {
-        margin-right: 10px;
-        font-size: 14px;
+        margin-right: 15px;
+        font-size: 18px;
+        /* Increased from 14px */
+        padding: 6px 0;
+        /* Better touch target */
+    }
+
+    .sort select {
+        font-size: 16px;
+        /* Larger text for dropdown */
+        padding: 4px 0;
     }
 }
 

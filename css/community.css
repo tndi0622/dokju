@@ -534,7 +534,23 @@
     .nav-controls {
         width: 100%;
         justify-content: space-between;
-        margin-top: 10px;
+        margin-top: 15px;
+    }
+
+    /* Larger controls for Tablet */
+    .nav-tabs a {
+        font-size: 18px;
+        padding-bottom: 8px;
+        margin-right: 5px;
+    }
+
+    .btn-write {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+
+    .sort-select-wrapper select {
+        font-size: 16px;
     }
 
     .post-item {

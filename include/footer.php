@@ -21,5 +21,85 @@
   </div>
 </footer>
 
+
+<!-- Scroll To Top Button -->
+<button id="scrollToTopBtn" title="맨 위로" aria-label="맨 위로 가기">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 15l-6-6-6 6"/>
+  </svg>
+</button>
+
+<style>
+#scrollToTopBtn {
+  display: none; /* Hidden by default */
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #2b2b2b; /* Primary dark color */
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  justify-content: center;
+  align-items: center;
+}
+
+#scrollToTopBtn:hover {
+  background: #444;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+/* Ensure flex display when visible */
+#scrollToTopBtn.visible {
+  display: flex !important;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    #scrollToTopBtn {
+        bottom: 20px;
+        right: 20px;
+        width: 44px;
+        height: 44px;
+    }
+}
+</style>
+
+<script>
+(function() {
+  if(location.pathname.includes('/admin/')) return;
+
+  const btn = document.getElementById('scrollToTopBtn');
+  
+  if(btn) {
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 300) {
+          btn.classList.add('visible');
+        } else {
+          btn.classList.remove('visible');
+        }
+      });
+      
+      btn.addEventListener('click', function() {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+  }
+})();
+</script>
+
 </body>
 </html>

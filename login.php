@@ -180,11 +180,11 @@ include './include/header.php';
          <input type="hidden" name="mode" value="find_id">
          <div class="input-group">
             <label class="input-label">이름</label>
-            <input type="text" name="name" class="input-field" placeholder="가입 시 입력한 이름" required>
+            <input type="text" name="name" class="input-field" placeholder="이름을 입력해주세요" required>
          </div>
          <div class="input-group">
             <label class="input-label">이메일</label>
-            <input type="email" name="email" class="input-field" placeholder="가입 시 입력한 이메일" required>
+            <input type="email" name="email" class="input-field" placeholder="이메일을 입력해주세요" required>
          </div>
          <button type="submit" class="btn-submit" style="padding:12px; font-size:16px;">아이디 찾기</button>
       </form>
@@ -194,15 +194,15 @@ include './include/header.php';
          <input type="hidden" name="mode" value="find_pw">
          <div class="input-group">
             <label class="input-label">아이디</label>
-            <input type="text" name="userid" class="input-field" placeholder="가입하신 아이디" required>
+            <input type="text" name="userid" class="input-field" placeholder="아이디를 입력해주세요" required>
          </div>
          <div class="input-group">
             <label class="input-label">이름</label>
-            <input type="text" name="name" class="input-field" placeholder="가입하신 이름" required>
+            <input type="text" name="name" class="input-field" placeholder="이름을 입력해주세요" required>
          </div>
          <div class="input-group">
             <label class="input-label">휴대전화</label>
-            <input type="tel" name="phone" class="input-field" placeholder="숫자만 입력" required>
+            <input type="tel" name="phone" class="input-field" placeholder="숫자만 입력해주세요" required>
          </div>
          <button type="submit" class="btn-submit" style="padding:12px; font-size:16px;">비밀번호 찾기</button>
       </form>

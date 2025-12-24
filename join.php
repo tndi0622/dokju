@@ -38,12 +38,12 @@ include './include/header.php';
   <form class="member-form" method="POST" action="" onsubmit="return validateJoin()">
     <div class="input-group">
       <label class="input-label">아이디</label>
-      <input type="text" name="userid" class="input-field" placeholder="로그인에 사용할 아이디" required>
+      <input type="text" name="userid" class="input-field" placeholder="아이디를 입력해주세요" required>
     </div>
     <div class="input-group">
       <label class="input-label">비밀번호</label>
       <div style="position:relative;">
-          <input type="password" name="pw" id="pwInput" class="input-field" placeholder="비밀번호" required style="padding-right:45px;">
+          <input type="password" name="pw" id="pwInput" class="input-field" placeholder="비밀번호를 입력해주세요" required style="padding-right:45px;">
           <button type="button" onclick="togglePassword()" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#888; padding:5px; display:flex; align-items:center;">
               <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -57,20 +57,20 @@ include './include/header.php';
       </div>
     </div>
     <div class="input-group">
-      <label class="input-label">이름 (실명)</label>
-      <input type="text" name="name" class="input-field" placeholder="실명을 입력해주세요" required>
+      <label class="input-label">이름</label>
+      <input type="text" name="name" class="input-field" placeholder="이름을 입력해주세요" required>
     </div>
     <div class="input-group">
       <label class="input-label">닉네임</label>
-      <input type="text" name="nickname" class="input-field" placeholder="표시될 닉네임" required>
+      <input type="text" name="nickname" class="input-field" placeholder="닉네임을 입력해주세요" required>
     </div>
     <div class="input-group">
       <label class="input-label">이메일</label>
-      <input type="email" name="email" class="input-field" placeholder="news@dokju.com" required>
+      <input type="email" name="email" class="input-field" placeholder="이메일을 입력해주세요" required>
     </div>
     <div class="input-group">
       <label class="input-label">휴대전화</label>
-      <input type="tel" name="phone" class="input-field" placeholder="010-0000-0000">
+      <input type="tel" name="phone" class="input-field" placeholder="전화번호를 입력해주세요(숫자만 입력해주세요)">
     </div>
     
     <button type="submit" class="btn-submit">가입하기</button>

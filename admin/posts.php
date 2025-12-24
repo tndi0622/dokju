@@ -2,8 +2,11 @@
 session_start();
 include '../include/db_connect.php';
 
-// Check if admin
-if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
+// Check if admin or manager
+$is_admin = (isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin');
+$is_manager = (isset($_SESSION['role']) && ($_SESSION['role'] === 'manager' || $_SESSION['role'] === 'admin'));
+
+if (!$is_admin && !$is_manager) {
     echo "<script>alert('관리자 권한이 필요합니다.'); location.href='/dokju/login.php';</script>";
     exit;
 }
@@ -48,7 +51,7 @@ $posts = $conn->query("SELECT p.*, u.name, u.nickname,
             <div class="admin-header">
                 <h2>커뮤니티 관리</h2>
                 <div class="admin-user">
-                    <span>관리자님 환영합니다</span>
+                    <span><?php echo htmlspecialchars($_SESSION['nickname'] ?? '관리자'); ?>님 환영합니다</span>
                     <a href="/dokju/logout.php" class="btn-logout">로그아웃</a>
                 </div>
             </div>

@@ -2,8 +2,11 @@
 session_start();
 include '../include/db_connect.php';
 
-// Check if admin
-if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
+// Check if admin or manager
+$is_admin = (isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin');
+$is_manager = (isset($_SESSION['role']) && ($_SESSION['role'] === 'manager' || $_SESSION['role'] === 'admin'));
+
+if (!$is_admin && !$is_manager) {
     echo "<script>alert('관리자 권한이 필요합니다.'); location.href='/dokju/login.php';</script>";
     exit;
 }

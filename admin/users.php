@@ -2,15 +2,28 @@
 session_start();
 include '../include/db_connect.php';
 
-// Check if admin
-if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
+// Check if admin or manager
+$is_admin = (isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin');
+$is_manager = (isset($_SESSION['role']) && ($_SESSION['role'] === 'manager' || $_SESSION['role'] === 'admin'));
+
+// Access Control: Admin and Manager can view
+if (!$is_admin && !$is_manager) {
     echo "<script>alert('관리자 권한이 필요합니다.'); location.href='/dokju/login.php';</script>";
     exit;
 }
 
+// Super Admin check for actions (Only Super Admin can edit/delete users)
+$is_super_admin = $is_admin || (isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
+// Note: 'admin' user is super admin. 'manager' role is not super admin.
+// If role is 'admin' (from DB), they are also super admin.
+// Wait, my logic for $is_manager included role==admin.
+// Let's refine:
+$can_manage_users = $is_admin || (isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
+
 // Get all users except admin
 $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY created_at DESC");
 ?>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -44,7 +57,7 @@ $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY crea
             <div class="admin-header">
                 <h2>회원 관리</h2>
                 <div class="admin-user">
-                    <span>관리자님 환영합니다</span>
+                    <span><?php echo htmlspecialchars($_SESSION['nickname'] ?? '관리자'); ?>님 환영합니다</span>
                     <a href="/dokju/logout.php" class="btn-logout">로그아웃</a>
                 </div>
             </div>
@@ -62,7 +75,10 @@ $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY crea
                             <th>전화번호</th>
                             <th>소셜타입</th>
                             <th>가입일</th>
+                            <th>권한</th>
+                            <?php if($can_manage_users): ?>
                             <th>관리</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
                     <tbody>
@@ -86,11 +102,34 @@ $users = $conn->query("SELECT * FROM users WHERE userid != 'admin' ORDER BY crea
                                 ?>
                             </td>
                             <td data-label="가입일"><?php echo date('Y-m-d', strtotime($user['created_at'])); ?></td>
+                            <td data-label="권한">
+                                <?php 
+                                $role = $user['role'] ?? 'user';
+                                if ($role === 'manager') {
+                                    echo '<span class="badge" style="background:#007bff; color:#fff;">관리자</span>';
+                                } else {
+                                    echo '<span class="badge" style="background:#eee; color:#333;">일반</span>';
+                                }
+                                ?>
+                            </td>
+                            <?php if($can_manage_users): ?>
                             <td data-label="관리">
+                                <?php if (($user['role'] ?? 'user') !== 'manager'): ?>
+                                    <a href="/dokju/admin/user_process.php?mode=promote&id=<?php echo $user['id']; ?>" 
+                                       class="btn-primary btn-sm" 
+                                       style="background-color:#28a745; border-color:#28a745; margin-right:5px;"
+                                       onclick="return confirm('관리자(상품관리 가능)로 지정하시겠습니까?')">관리자 지정</a>
+                                <?php else: ?>
+                                    <a href="/dokju/admin/user_process.php?mode=demote&id=<?php echo $user['id']; ?>" 
+                                       class="btn-warning btn-sm" 
+                                       style="background-color:#ffc107; border-color:#ffc107; color:#000; margin-right:5px;"
+                                       onclick="return confirm('관리자 권한을 해제하시겠습니까?')">해제</a>
+                                <?php endif; ?>
                                 <a href="/dokju/admin/user_process.php?mode=delete&id=<?php echo $user['id']; ?>" 
                                    class="btn-primary btn-sm btn-delete" 
                                    onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
                             </td>
+                            <?php endif; ?>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>

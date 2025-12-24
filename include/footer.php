@@ -11,7 +11,12 @@
           <span style="display:block; margin-top:12px; font-size:14px; color:#888;">
             고객센터 운영시간 : 평일 10:00 ~ 17:00<br>
             (점심 12:00 ~ 13:00)
-            <?php if(isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin'): ?>
+            <?php 
+            $is_admin_footer = (isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin');
+            $is_manager_footer = (isset($_SESSION['role']) && ($_SESSION['role'] === 'manager' || $_SESSION['role'] === 'admin'));
+            
+            if($is_admin_footer || $is_manager_footer): 
+            ?>
               <br><a href="/dokju/admin/dashboard.php" style="color:red; text-decoration:none; font-weight:bold; margin-top:10px; display:inline-block;">[관리자 페이지]</a>
             <?php endif; ?>
           </span>

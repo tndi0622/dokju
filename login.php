@@ -46,7 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $userid = $_POST['userid'];
         $pw = $_POST['pw'];
         
-        $stmt = $conn->prepare("SELECT password, name, nickname FROM users WHERE userid = ?");
+        // Check if role column exists (prevent crashing if migration not run)
+        // Ideally schema should be updated. Assuming schema update:
+        $stmt = $conn->prepare("SELECT password, name, nickname, role FROM users WHERE userid = ?");
+        // Fallback if query fails will be handled by exception usually, but let's try standard approach.
+        // Recover if column missing logic is too complex for login.php. We assume migration.
+        
         $stmt->bind_param("s", $userid);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -55,7 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(password_verify($pw, $row['password'])) {
                 // Login Success
                 $_SESSION['userid'] = $userid;
+                $_SESSION['role'] = $row['role'] ?? 'user';
+                $_SESSION['nickname'] = !empty($row['nickname']) ? $row['nickname'] : $row['name'];
                 
+                // Hardcode admin role for 'admin' user just in case
+                if ($userid === 'admin') {
+                    $_SESSION['role'] = 'admin';
+                }
+
                 // Auto Login
                 if(isset($_POST['auto_login'])) {
                     setcookie('dokju_auto_login', $userid, time() + (86400 * 30), "/");

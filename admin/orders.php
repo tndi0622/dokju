@@ -2,9 +2,12 @@
 session_start();
 include '../include/db_connect.php';
 
-// --- Admin Check (Simple) ---
-if (!isset($_SESSION['userid']) || $_SESSION['userid'] !== 'admin') {
-    echo "<script>alert('관리자만 접근 가능합니다.'); location.href='/dokju/index.php';</script>";
+// Check if admin or manager
+$is_admin = (isset($_SESSION['userid']) && $_SESSION['userid'] === 'admin');
+$is_manager = (isset($_SESSION['role']) && ($_SESSION['role'] === 'manager' || $_SESSION['role'] === 'admin'));
+
+if (!$is_admin && !$is_manager) {
+    echo "<script>alert('관리자 권한이 필요합니다.'); location.href='/dokju/login.php';</script>";
     exit;
 }
 
@@ -182,7 +185,8 @@ $result = $conn->query($sql);
             <header class="admin-header">
                 <h2>배송 관리</h2>
                 <div class="admin-user">
-                    <span>관리자님</span>
+                    <span><?php echo htmlspecialchars($_SESSION['nickname'] ?? '관리자'); ?>님 환영합니다</span>
+                    <a href="/dokju/logout.php" class="btn-logout">로그아웃</a>
                 </div>
             </header>
 

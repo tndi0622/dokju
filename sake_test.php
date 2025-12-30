@@ -70,7 +70,7 @@ $recommend_json = json_encode($recommends, JSON_UNESCAPED_UNICODE);
                 <!-- Products injected here -->
             </div>
             <div id="no-products" style="display:none; color:#999; margin-bottom:20px;">
-                현재 추천 상품 재고가 부족합니다 😢<br>샵에서 더 많은 상품을 확인해보세요.
+                현재 추천 상품 재고가 부족합니다 <br>샵에서 더 많은 상품을 확인해보세요.
             </div>
         </div>
 

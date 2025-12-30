@@ -106,7 +106,7 @@ const questions = [
         q: "Q3. 술에서 가장 중요하게 생각하는 것은?",
         a: [
             { text: "입안 가득 퍼지는 화려한 향기", type: ["daiginjo"] },
-            { text: "목넘김이 깔끔하고 뒷맛이 개운한 것", type: ["honjozo", "junmai"] }
+            { text: "목넘김이 깔끔하고 뒷맛이 개운한 것", type: ["honjozo", "junmai", "futsushu"] }
         ]
     },
     {
@@ -141,7 +141,7 @@ const questions = [
         q: "Q8. '쌀' 본연의 맛을 좋아하시나요?",
         a: [
             { text: "네! 밥맛처럼 구수한 감칠맛이 최고죠", type: ["junmai"] },
-            { text: "아뇨, 술은 맑고 깨끗해야죠", type: ["daiginjo", "honjozo"] }
+            { text: "아뇨, 술은 맑고 깨끗해야죠", type: ["daiginjo", "honjozo", "futsushu"] }
         ]
     },
     {

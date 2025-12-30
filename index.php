@@ -90,7 +90,6 @@
               </li>
             </ul>
           </div>
-          <a class="btn" href="/dokju/intro.php">자세히 알아보기</a>
         </div>
         <div class="img-wrap">
           <img class="ink" src="/dokju/images/sake_bottle.jpg" alt="사케 병">
